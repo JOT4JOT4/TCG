@@ -16,15 +16,15 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.execute("ALTER TYPE cardtype RENAME TO cardtype_old")
-    op.execute("CREATE TYPE cardtype AS ENUM ('LOGIA', 'PARAMECIA', 'ZOAN')")
+    op.execute("CREATE TYPE cardtype AS ENUM ('Paper', 'Rock', 'Scissors')")
     op.execute(
         """
         ALTER TABLE cards
         ALTER COLUMN card_type TYPE cardtype
         USING CASE card_type::text
-            WHEN 'SPELL' THEN 'LOGIA'::cardtype
-            WHEN 'RESOURCE' THEN 'PARAMECIA'::cardtype
-            ELSE 'ZOAN'::cardtype
+            WHEN 'SPELL' THEN 'Paper'::cardtype
+            WHEN 'RESOURCE' THEN 'Rock'::cardtype
+            ELSE 'Scissors'::cardtype
         END
         """
     )
@@ -70,8 +70,8 @@ def downgrade() -> None:
         ALTER TABLE cards
         ALTER COLUMN card_type TYPE cardtype
         USING CASE card_type::text
-            WHEN 'LOGIA' THEN 'SPELL'::cardtype
-            WHEN 'PARAMECIA' THEN 'RESOURCE'::cardtype
+            WHEN 'Paper' THEN 'SPELL'::cardtype
+            WHEN 'Rock' THEN 'RESOURCE'::cardtype
             ELSE 'CREATURE'::cardtype
         END
         """
