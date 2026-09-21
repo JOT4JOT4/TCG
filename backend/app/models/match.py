@@ -31,3 +31,23 @@ class MatchPlayer(Base):
     deck_id: Mapped[int] = mapped_column(ForeignKey("decks.id"))
 
     match = relationship("Match", back_populates="players")
+
+
+class RoundResult(StrEnum):
+    PLAYER_ONE = "player_one"
+    PLAYER_TWO = "player_two"
+    DRAW = "draw"
+
+
+class MatchRound(Base):
+    __tablename__ = "match_rounds"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    match_id: Mapped[int] = mapped_column(ForeignKey("matches.id", ondelete="CASCADE"))
+    player_one_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
+    player_one_card_id: Mapped[int] = mapped_column(ForeignKey("cards.id"))
+    player_two_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
+    player_two_card_id: Mapped[int] = mapped_column(ForeignKey("cards.id"))
+    result: Mapped[RoundResult] = mapped_column(Enum(RoundResult))
+
+    match = relationship("Match")

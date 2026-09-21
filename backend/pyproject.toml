@@ -24,6 +24,10 @@ dev = [
   "ruff>=0.6",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
 [tool.setuptools]
 package-dir = {"" = "."}
 

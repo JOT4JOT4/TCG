@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.card import CardType
-from app.models.match import MatchStatus
+from app.models.match import MatchStatus, RoundResult
 
 
 class PlayerCreate(BaseModel):
@@ -21,10 +21,8 @@ class PlayerRead(PlayerCreate):
 class CardCreate(BaseModel):
     name: str = Field(min_length=1, max_length=100)
     card_type: CardType
+    power: int = Field(ge=1, le=9)
     description: str = ""
-    cost: int = Field(default=0, ge=0)
-    attack: int = Field(default=0, ge=0)
-    health: int = Field(default=0, ge=0)
 
 
 class CardRead(CardCreate):
@@ -57,11 +55,26 @@ class DeckCardRead(DeckCardCreate):
 
 
 class MatchCreate(BaseModel):
-    player_ids: list[int] = Field(min_length=1, max_length=2)
-    deck_ids: list[int] = Field(min_length=1, max_length=2)
+    player_ids: list[int] = Field(min_length=2, max_length=2)
+    deck_ids: list[int] = Field(min_length=2, max_length=2)
 
 
 class MatchRead(BaseModel):
     id: int
     status: MatchStatus
     winner_id: int | None
+
+
+class CombatCreate(BaseModel):
+    player_one_id: int
+    player_one_card_id: int
+    player_two_id: int
+    player_two_card_id: int
+
+
+class CombatRead(CombatCreate):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    match_id: int
+    result: RoundResult

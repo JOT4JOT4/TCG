@@ -5,11 +5,14 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.card import Card
 from app.models.deck import Deck, DeckCard
-from app.models.match import Match, MatchPlayer
+from app.models.match import Match, MatchPlayer, MatchRound
 from app.models.player import Player
+from app.services.combat import resolve_combat
 from app.schemas import (
     CardCreate,
     CardRead,
+    CombatCreate,
+    CombatRead,
     DeckCardCreate,
     DeckCardRead,
     DeckCreate,
@@ -121,6 +124,35 @@ def create_match(payload: MatchCreate, db: Session = Depends(get_db)) -> Match:
     db.commit()
     db.refresh(match)
     return match
+
+
+@router.post("/matches/{match_id}/rounds", response_model=CombatRead, status_code=status.HTTP_201_CREATED)
+def resolve_match_round(
+    match_id: int,
+    payload: CombatCreate,
+    db: Session = Depends(get_db),
+) -> MatchRound:
+    match = db.get(Match, match_id)
+    if match is None:
+        raise HTTPException(status_code=404, detail="Match not found")
+    if payload.player_one_id == payload.player_two_id:
+        raise HTTPException(status_code=400, detail="A round needs two different players")
+
+    participants = {participant.player_id for participant in match.players}
+    if {payload.player_one_id, payload.player_two_id} != participants:
+        raise HTTPException(status_code=400, detail="Players must belong to the match")
+
+    card_one = db.get(Card, payload.player_one_card_id)
+    card_two = db.get(Card, payload.player_two_card_id)
+    if card_one is None or card_two is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    result = resolve_combat(card_one.card_type, card_one.power, card_two.card_type, card_two.power)
+    round_result = MatchRound(match_id=match_id, result=result, **payload.model_dump())
+    db.add(round_result)
+    db.commit()
+    db.refresh(round_result)
+    return round_result
 
 
 @router.get("/matches", response_model=list[MatchRead])

@@ -1,6 +1,8 @@
 from app.schemas.domain import (
 	CardCreate,
 	CardRead,
+	CombatCreate,
+	CombatRead,
 	DeckCardCreate,
 	DeckCardRead,
 	DeckCreate,
@@ -14,6 +16,8 @@ from app.schemas.domain import (
 __all__ = [
 	"CardCreate",
 	"CardRead",
+	"CombatCreate",
+	"CombatRead",
 	"DeckCardCreate",
 	"DeckCardRead",
 	"DeckCreate",

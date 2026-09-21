@@ -7,9 +7,9 @@ from app.db.session import Base
 
 
 class CardType(StrEnum):
-    CREATURE = "creature"
-    SPELL = "spell"
-    RESOURCE = "resource"
+    LOGIA = "logia"
+    PARAMECIA = "paramecia"
+    ZOAN = "zoan"
 
 
 class Card(Base):
@@ -18,7 +18,5 @@ class Card(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), index=True)
     card_type: Mapped[CardType] = mapped_column(Enum(CardType), index=True)
+    power: Mapped[int] = mapped_column(Integer, default=1)
     description: Mapped[str] = mapped_column(Text, default="")
-    cost: Mapped[int] = mapped_column(Integer, default=0)
-    attack: Mapped[int] = mapped_column(Integer, default=0)
-    health: Mapped[int] = mapped_column(Integer, default=0)
