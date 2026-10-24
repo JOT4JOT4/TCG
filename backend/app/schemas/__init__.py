@@ -11,6 +11,8 @@ from app.schemas.domain import (
 	MatchRead,
 	PlayerCreate,
 	PlayerRead,
+	GameCardChoice,
+	GameStateRead,
 )
 
 __all__ = [
@@ -26,4 +28,6 @@ __all__ = [
 	"MatchRead",
 	"PlayerCreate",
 	"PlayerRead",
+	"GameCardChoice",
+	"GameStateRead",
 ]

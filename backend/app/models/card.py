@@ -7,9 +7,9 @@ from app.db.session import Base
 
 
 class CardType(StrEnum):
-    Paper = "logia"
-    Rock = "paramecia"
-    Scissors = "zoan"
+    LOGIA = "logia"
+    PARAMECIA = "paramecia"
+    ZOAN = "zoan"
 
 
 class Card(Base):

@@ -8,6 +8,13 @@ from app.models.deck import Deck, DeckCard
 from app.models.match import Match, MatchPlayer, MatchRound
 from app.models.player import Player
 from app.services.combat import resolve_combat
+from app.services.match_game import (
+    choose_player_card,
+    create_game,
+    reveal_game,
+    resolve_game_round,
+    serialize_game,
+)
 from app.schemas import (
     CardCreate,
     CardRead,
@@ -21,14 +28,74 @@ from app.schemas import (
     MatchRead,
     PlayerCreate,
     PlayerRead,
+    GameCardChoice,
+    GameStateRead,
 )
 
 router = APIRouter()
+games = {}
 
 
 @router.get("/health")
 def api_health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+def _game_state(game_id: int) -> dict:
+    game = games.get(game_id)
+    if game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    state = serialize_game(game, reveal=game.phase in {"revealed", "finished"})
+    state["game_id"] = game_id
+    return state
+
+
+@router.post("/combat/games", response_model=GameStateRead, status_code=status.HTTP_201_CREATED)
+def create_combat_game() -> dict:
+    game_id = max(games, default=0) + 1
+    games[game_id] = create_game()
+    return _game_state(game_id)
+
+
+@router.get("/combat/games/{game_id}", response_model=GameStateRead)
+def get_combat_game(game_id: int) -> dict:
+    return _game_state(game_id)
+
+
+@router.post("/combat/games/{game_id}/choice", response_model=GameStateRead)
+def choose_combat_card(game_id: int, payload: GameCardChoice) -> dict:
+    game = games.get(game_id)
+    if game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    try:
+        choose_player_card(game, payload.card_id)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    return _game_state(game_id)
+
+
+@router.post("/combat/games/{game_id}/reveal", response_model=GameStateRead)
+def reveal_combat_cards(game_id: int) -> dict:
+    game = games.get(game_id)
+    if game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    try:
+        reveal_game(game)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    return _game_state(game_id)
+
+
+@router.post("/combat/games/{game_id}/resolve", response_model=GameStateRead)
+def resolve_combat_round(game_id: int) -> dict:
+    game = games.get(game_id)
+    if game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    try:
+        resolve_game_round(game)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    return _game_state(game_id)
 
 
 @router.post("/players", response_model=PlayerRead, status_code=status.HTTP_201_CREATED)
