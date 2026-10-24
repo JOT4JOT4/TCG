@@ -26,8 +26,9 @@ frontend/
 
 ## Arranque previsto
 
+- Pruebas de Backend: `python -m pytest`
 - Backend: `uvicorn app.main:app --reload`
-- Frontend: `npm run dev`
+- Frontend: `npm install , npm run dev`
 - Base de datos: `docker compose up db`
 - Migraciones: `cd backend` y después `alembic upgrade head`
 - Tests: `cd backend` y después `pytest`
