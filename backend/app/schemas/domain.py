@@ -78,3 +78,40 @@ class CombatRead(CombatCreate):
     id: int
     match_id: int
     result: RoundResult
+
+
+class GameCardRead(BaseModel):
+    id: int
+    name: str
+    card_type: CardType
+    power: int
+    description: str
+
+
+class GamePlayerRead(BaseModel):
+    hand: list[GameCardRead] = []
+    hand_count: int | None = None
+    deck_count: int
+    graveyard: list[GameCardRead] | None = None
+    graveyard_count: int | None = None
+    life: int
+
+
+class GameFieldsRead(BaseModel):
+    player: GameCardRead | None
+    rival: GameCardRead | None
+
+
+class GameStateRead(BaseModel):
+    game_id: int
+    round: int
+    phase: str
+    result: RoundResult | None
+    winner: str | None
+    player: GamePlayerRead
+    rival: GamePlayerRead
+    fields: GameFieldsRead
+
+
+class GameCardChoice(BaseModel):
+    card_id: int
