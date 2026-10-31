@@ -112,6 +112,31 @@ button:focus-visible {
   color: #fff;
 }
 
+.topbar-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.back-menu-button {
+  background: #361b0c;
+  color: #fff8ee;
+  border: 1.5px solid #824b25;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: 'Arial Black', Impact, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.back-menu-button:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
 .battle-layout {
   max-width: 1500px;
   margin: 38px auto 0;

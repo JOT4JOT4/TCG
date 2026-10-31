@@ -96,7 +96,7 @@ function GameScreen({ onBackToMenu }) {
         <div className="match-status"><span className="live-dot" /> PARTIDA EN CURSO <span className="round-pill">RONDA {game.round}</span></div>
         <div className="topbar-actions">
           <button className="restart-button" onClick={startGame} disabled={busy} type="button">↻ Reiniciar</button>
-          <button className="restart-button" onClick={onBackToMenu} type="button">← Menú</button>
+          <button className="back-menu-button" onClick={onBackToMenu} type="button">← Menú Principal</button>
         </div>
       </header>
       {error && <div className="error-banner">{error}</div>}
@@ -112,7 +112,12 @@ function GameScreen({ onBackToMenu }) {
           <div className="action-row">
             {game.phase === 'ready' && <button className="primary-action" onClick={() => perform('reveal')} disabled={busy} type="button">Revelar cartas <span>→</span></button>}
             {game.phase === 'revealed' && <button className="primary-action" onClick={() => perform('resolve')} disabled={busy} type="button">Resolver ronda <span>→</span></button>}
-            {game.phase === 'finished' && <button className="primary-action" onClick={startGame} disabled={busy} type="button">Nueva partida <span>↻</span></button>}
+            {game.phase === 'finished' && (
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button className="primary-action" onClick={startGame} disabled={busy} type="button">Nueva partida <span>↻</span></button>
+                <button className="primary-action" onClick={onBackToMenu} type="button">Volver al Menú <span>←</span></button>
+              </div>
+            )}
           </div>
         </section>
         <aside className="player-panel user-panel">
