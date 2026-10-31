@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import MainMenu from './MainMenu'
 
+/* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const STARTING_LIFE = 3
 const TYPE_LABELS = { logia: 'Logia', paramecia: 'Paramecia', zoan: 'Zoan' }
@@ -17,6 +19,7 @@ async function api(path, options = {}) {
   return response.json()
 }
 
+/* ─── Componente: Carta ──────────────────────────────────────── */
 function Card({ card, faceDown = false, onClick, disabled = false }) {
   if (faceDown) return <div className="card card-back" aria-label="Carta boca abajo"><span>TCG</span><small>COMBATE</small></div>
   return (
@@ -30,6 +33,7 @@ function Card({ card, faceDown = false, onClick, disabled = false }) {
   )
 }
 
+/* ─── Componente: Barra de vida ──────────────────────────────── */
 function Life({ value, label, rival = false }) {
   return (
     <div className="life-block">
@@ -39,7 +43,8 @@ function Life({ value, label, rival = false }) {
   )
 }
 
-export default function App() {
+/* ─── Componente: Pantalla de juego ──────────────────────────── */
+function GameScreen({ onBackToMenu }) {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -71,7 +76,12 @@ export default function App() {
     return game.result === 'player_one' ? '¡Tu carta gana la ronda!' : 'El rival gana la ronda.'
   }, [game])
 
-  if (!game) return <main className="app-shell loading-screen"><p>{error || 'Conectando con el servidor...'}</p>{error && <button className="primary-action" onClick={startGame} type="button">Reintentar</button>}</main>
+  if (!game) return (
+    <main className="app-shell loading-screen">
+      <p>{error || 'Conectando con el servidor...'}</p>
+      {error && <button className="primary-action" onClick={startGame} type="button">Reintentar</button>}
+    </main>
+  )
 
   const fieldCard = (card, side) => {
     if (game.phase === 'ready') return <Card faceDown />
@@ -84,7 +94,10 @@ export default function App() {
       <header className="topbar">
         <div className="brand"><span className="brand-mark">✦</span><span>ARCANA <b>DUEL</b></span></div>
         <div className="match-status"><span className="live-dot" /> PARTIDA EN CURSO <span className="round-pill">RONDA {game.round}</span></div>
-        <button className="restart-button" onClick={startGame} disabled={busy} type="button">↻ Reiniciar</button>
+        <div className="topbar-actions">
+          <button className="restart-button" onClick={startGame} disabled={busy} type="button">↻ Reiniciar</button>
+          <button className="restart-button" onClick={onBackToMenu} type="button">← Menú</button>
+        </div>
       </header>
       {error && <div className="error-banner">{error}</div>}
       <section className="battle-layout">
@@ -115,4 +128,25 @@ export default function App() {
       </section>
     </main>
   )
+}
+
+/* ─── App raíz ───────────────────────────────────────────────── */
+export default function App() {
+  const [screen, setScreen] = useState('menu') // 'menu' | 'game'
+  const [musicVol, setMusicVol] = useState(70)
+  const [sfxVol, setSfxVol] = useState(80)
+
+  if (screen === 'menu') {
+    return (
+      <MainMenu
+        onPlay={() => setScreen('game')}
+        musicVol={musicVol}
+        sfxVol={sfxVol}
+        onMusicChange={setMusicVol}
+        onSfxChange={setSfxVol}
+      />
+    )
+  }
+
+  return <GameScreen onBackToMenu={() => setScreen('menu')} />
 }
