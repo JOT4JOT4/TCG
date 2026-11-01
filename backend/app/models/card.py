@@ -20,3 +20,4 @@ class Card(Base):
     card_type: Mapped[CardType] = mapped_column(Enum(CardType), index=True)
     power: Mapped[int] = mapped_column(Integer, default=1)
     description: Mapped[str] = mapped_column(Text, default="")
+    image_url: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)

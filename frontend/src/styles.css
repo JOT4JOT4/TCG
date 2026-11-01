@@ -411,130 +411,192 @@ button:focus-visible {
   font-size: 1.1rem;
 }
 
+/* ─── Carta Oficial One Piece TCG ────────────────────────────── */
 .card {
-  width: 136px;
-  height: 194px;
-  border-radius: 11px;
-  border: 1px solid #775587;
-  padding: 12px 11px;
-  color: #f6effa;
+  width: 140px;
+  height: 204px;
+  border-radius: 14px;
+  padding: 3px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  text-align: left;
-  position: relative;
-  box-shadow: 0 12px 22px #07050c88;
-  transition: transform .2s, box-shadow .2s;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, filter 0.2s ease;
+  user-select: none;
+  box-sizing: border-box;
 }
 
 button.card {
   cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 3px;
+  margin: 0;
 }
 
 button.card:hover:not(:disabled) {
-  transform: translateY(-12px);
-  box-shadow: 0 20px 30px #05030b99;
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.85);
+  filter: brightness(1.1);
+  z-index: 10;
 }
 
 button.card:disabled {
   cursor: default;
-}
-
-.card-logia {
-  background: linear-gradient(150deg, #45306a, #211b3e 70%);
-}
-
-.card-paramecia {
-  background: linear-gradient(150deg, #6b3f5a, #291c3c 70%);
-}
-
-.card-zoan {
-  background: linear-gradient(150deg, #315b61, #1c2e43 70%);
-}
-
-.card-topline {
-  display: flex;
-  justify-content: space-between;
-  font-size: .62rem;
-  color: #dec4ed;
-}
-
-.card-topline b {
-  font-size: .43rem;
-  letter-spacing: .1em;
-  font-weight: 500;
-  align-self: center;
-}
-
-.card-art {
-  height: 75px;
-  display: grid;
-  place-items: center;
-  font-family: Georgia, serif;
-  font-size: 1.7rem;
-  color: #efd9ff;
-  text-shadow: 0 0 22px #edc7ff88;
-}
-
-.card strong {
-  font-family: Georgia, serif;
-  font-size: .76rem;
-  font-weight: 400;
-  margin-bottom: 5px;
-}
-
-.card small {
-  color: #c1b2cb;
-  font-size: .52rem;
-  line-height: 1.35;
-}
-
-.card-power {
-  margin-top: auto;
-  border-top: 1px solid #ffffff22;
-  padding-top: 7px;
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  font-family: Georgia, serif;
-  font-size: 1.3rem;
-  color: #f0ccf4;
-}
-
-.card-power span {
-  font-family: Inter, sans-serif;
-  font-size: .43rem;
-  letter-spacing: .1em;
-  color: #bcaac4;
-}
-
-.card-back {
-  background: repeating-linear-gradient(135deg, #29203d, #29203d 7px, #34264b 7px, #34264b 14px);
-  border-color: #806096;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.card-back::before {
-  content: "✦";
-  font-size: 2.8rem;
-  color: #d1a6ed;
-  opacity: .7;
-}
-
-.card-back span {
-  font-family: Georgia, serif;
-  letter-spacing: .16em;
-  color: #ebd4ff;
-}
-
-.card-back small {
-  margin-top: 4px;
-  letter-spacing: .2em;
+  opacity: 0.85;
 }
 
 .card.is-selected {
-  transform: translateY(-8px);
+  transform: translateY(-12px) scale(1.04);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Colores de tipo solicitados */
+/* ZOAN ES VERDE */
+.card-zoan {
+  border: 5px solid #288a3b !important;
+  background: #185a26 !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(40, 138, 59, 0.35);
+}
+
+/* PARAMECIA ES ROJO */
+.card-paramecia {
+  border: 5px solid #d32f2f !important;
+  background: #8a1d1d !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(211, 47, 47, 0.35);
+}
+
+/* LOGIA ES MORADO */
+.card-logia {
+  border: 5px solid #7b1fa2 !important;
+  background: #4a148c !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(123, 31, 162, 0.35);
+}
+
+/* Marco interior con la ilustración */
+.card-frame-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  position: relative;
+  overflow: hidden;
+  background: #0d0b14;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-illustration-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+}
+
+.card-art-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 2rem;
+  color: #eedaff;
+  background: #241432;
+}
+
+/* Insignias circulares de poder (esquina superior derecha e inferior izquierda) */
+.card-corner-power {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.75);
+  background: #ffffff !important;
+  border: 2px solid #222222 !important;
+}
+
+/* Colores de fondo del círculo para que el número negro y la calavera blanca sean 100% visibles */
+.card-zoan .card-corner-power {
+  background: #5cdb6e !important;
+  border: 2.5px solid #0f511b !important;
+}
+
+.card-paramecia .card-corner-power {
+  background: #ff5252 !important;
+  border: 2.5px solid #6b0000 !important;
+}
+
+.card-logia .card-corner-power {
+  background: #ba68c8 !important;
+  border: 2.5px solid #4a148c !important;
+}
+
+.power-tr {
+  top: 4px;
+  right: 4px;
+}
+
+.power-bl {
+  bottom: 4px;
+  left: 4px;
+}
+
+.card-num-img {
+  width: 22px;
+  height: 26px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Franja del nombre del personaje */
+.card-name-banner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(8, 6, 14, 0.95) 0%, rgba(8, 6, 14, 0.75) 75%, transparent 100%);
+  padding: 8px 6px 3px 36px;
+  z-index: 4;
+}
+
+.card-name-text {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+/* Reverso de la carta con backcard.png */
+.card-back {
+  padding: 0 !important;
+  border: 3.5px solid #1a120b !important;
+  background: #0d0905 !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75);
+}
+
+.card-back-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  pointer-events: none;
 }
 
 .hand-section {
@@ -1227,6 +1289,22 @@ button.card:disabled {
   transform: translateY(-1px);
 }
 
+
+.wood-filter-btn.filter-btn-zoan.active {
+  background: #288a3b !important;
+  border-color: #6ee7b7 !important;
+}
+
+.wood-filter-btn.filter-btn-paramecia.active {
+  background: #d32f2f !important;
+  border-color: #fca5a5 !important;
+}
+
+.wood-filter-btn.filter-btn-logia.active {
+  background: #7b1fa2 !important;
+  border-color: #d8b4fe !important;
+}
+
 .wood-filter-btn.active {
   background: #cb7812;
   border-color: #f7b752;
@@ -1270,6 +1348,355 @@ button.card:disabled {
 
 .wood-gallery-error {
   color: #a81c1c;
+}
+
+
+/* ─── Galería & Colección de Cartas ────────────────────────────── */
+.wood-gallery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #5a2e12;
+}
+
+.wood-gallery-search-wrap {
+  margin-left: auto;
+}
+
+.wood-gallery-search {
+  background: #2a1408;
+  border: 1.5px solid #8e5229;
+  border-radius: 8px;
+  color: #fff6e8;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  outline: none;
+  width: 190px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wood-gallery-search:focus {
+  border-color: #f7b752;
+  box-shadow: 0 0 8px rgba(247, 183, 82, 0.35);
+}
+
+.wood-gallery-search::placeholder {
+  color: #a87e5b;
+}
+
+.mm-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+  gap: 16px;
+  justify-items: center;
+  padding: 14px 4px;
+}
+
+.gallery-card-item {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s ease, filter 0.18s ease;
+  user-select: none;
+}
+
+.gallery-card-item:hover {
+  transform: translateY(-8px) scale(1.04);
+  filter: brightness(1.12);
+}
+
+.gallery-card-item:hover .card {
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.75), 0 0 18px rgba(247, 183, 82, 0.4);
+}
+
+.gallery-card-id-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(14, 10, 24, 0.85);
+  color: #f7d59b;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+/* Carta grande en modal detalle */
+.card-lg {
+  width: 220px !important;
+  height: 320px !important;
+  border-width: 8px !important;
+  border-radius: 20px !important;
+}
+
+.card-lg .card-corner-power {
+  width: 48px !important;
+  height: 48px !important;
+  border-width: 3.5px !important;
+}
+
+.card-lg .card-num-img {
+  width: 32px !important;
+  height: 38px !important;
+}
+
+.card-lg .card-brand-logo {
+  font-size: 0.95rem !important;
+}
+
+.card-lg .card-brand-sub {
+  font-size: 0.6rem !important;
+}
+
+.card-lg .card-name-banner {
+  padding: 14px 10px 8px 52px !important;
+}
+
+.card-lg .card-name-text {
+  font-size: 0.9rem !important;
+}
+
+.card-lg .card-art {
+  height: 95px !important;
+  font-size: 2.3rem !important;
+}
+
+.card-lg strong {
+  font-size: 0.95rem !important;
+  margin-bottom: 7px !important;
+}
+
+.card-lg small {
+  font-size: 0.62rem !important;
+  line-height: 1.4 !important;
+}
+
+.card-lg .card-power {
+  font-size: 1.6rem !important;
+}
+
+/* Modal Detalle de Carta */
+.card-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 14, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 16px;
+  animation: mmFadeIn 0.18s ease-out;
+}
+
+.card-detail-box {
+  background: #191428;
+  border: 2px solid #5a4576;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), inset 0 0 30px rgba(110, 80, 160, 0.2);
+  max-width: 620px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 26px 28px;
+}
+
+.card-detail-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.12s ease;
+}
+
+.card-detail-close:hover {
+  background: #a81c1c;
+}
+
+.card-detail-grid {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.card-detail-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.card-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-detail-chip {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  color: #c9a3ff;
+  text-transform: uppercase;
+}
+
+.card-detail-title {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-detail-badges {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card-type-pill {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.type-pill-logia {
+  background: #4a148c;
+  color: #f3e8ff;
+  border: 1.5px solid #ab47bc;
+}
+
+.type-pill-paramecia {
+  background: #8a1d1d;
+  color: #fee2e2;
+  border: 1.5px solid #ef4444;
+}
+
+.type-pill-zoan {
+  background: #14532d;
+  color: #dcfce7;
+  border: 1.5px solid #22c55e;
+}
+
+.card-power-pill {
+  font-size: 0.7rem;
+  color: #dec8ea;
+}
+
+.card-power-pill strong {
+  color: #f7d59b;
+  font-size: 0.85rem;
+}
+
+.card-stat-bar-wrap {
+  margin: 2px 0 6px;
+}
+
+.card-stat-bar-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.card-stat-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.fill-logia {
+  background: linear-gradient(90deg, #8857cc, #caa3ff);
+}
+
+.fill-paramecia {
+  background: linear-gradient(90deg, #be437f, #ffa3cb);
+}
+
+.fill-zoan {
+  background: linear-gradient(90deg, #3795a3, #8be9fd);
+}
+
+.card-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-detail-label {
+  font-size: 0.58rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #9f8fb4;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.card-detail-text {
+  font-size: 0.78rem;
+  color: #e5daf0;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.card-detail-rule {
+  color: #fce4b8;
+  background: rgba(247, 183, 82, 0.1);
+  border-left: 3px solid #f7b752;
+  padding: 6px 10px;
+  border-radius: 0 6px 6px 0;
+}
+
+.card-detail-action {
+  align-self: flex-start;
+  margin-top: 6px;
+  background: #391c0e;
+  color: #fff6e8;
+  border: 1.5px solid #8e5229;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.card-detail-action:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 580px) {
+  .card-detail-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .card-detail-visual {
+    margin-bottom: 8px;
+  }
+  .card-detail-action {
+    align-self: center;
+  }
 }
 
 /* ─── Responsive ────────────────────────────────────────────────── */

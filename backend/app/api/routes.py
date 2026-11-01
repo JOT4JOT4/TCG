@@ -9,6 +9,7 @@ from app.models.match import Match, MatchPlayer, MatchRound
 from app.models.player import Player
 from app.services.combat import resolve_combat
 from app.services.match_game import (
+    GameCard,
     choose_player_card,
     create_game,
     reveal_game,
@@ -51,9 +52,23 @@ def _game_state(game_id: int) -> dict:
 
 
 @router.post("/combat/games", response_model=GameStateRead, status_code=status.HTTP_201_CREATED)
-def create_combat_game() -> dict:
+def create_combat_game(db: Session = Depends(get_db)) -> dict:
+    db_cards = list(db.scalars(select(Card).order_by(Card.id)))
+    cards = None
+    if db_cards and len(db_cards) >= 5:
+        cards = [
+            GameCard(
+                id=c.id,
+                name=c.name,
+                card_type=c.card_type.value,
+                power=c.power,
+                description=c.description,
+                image_url=c.image_url,
+            )
+            for c in db_cards
+        ]
     game_id = max(games, default=0) + 1
-    games[game_id] = create_game()
+    games[game_id] = create_game(cards)
     return _game_state(game_id)
 
 

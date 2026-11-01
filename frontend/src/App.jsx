@@ -2,12 +2,25 @@ import { useEffect, useMemo, useState } from 'react'
 import MainMenu from './MainMenu'
 import gameBg from './assets/background-while-game.webp'
 import arenaBg from './assets/escenario-juego.jpg'
+import backCardImg from './assets/backcard.png'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const STARTING_LIFE = 3
 const TYPE_LABELS = { logia: 'Logia', paramecia: 'Paramecia', zoan: 'Zoan' }
 const TYPE_ICONS = { logia: '✦', paramecia: '◆', zoan: '◈' }
+
+const NUM_IMAGES = {
+  1: '/nums/uno.png',
+  2: '/nums/dos.png',
+  3: '/nums/tres.png',
+  4: '/nums/cuatro.png',
+  5: '/nums/cinco.png',
+  6: '/nums/seis.png',
+  7: '/nums/siete.png',
+  8: '/nums/ocho.png',
+  9: '/nums/nueve.png',
+}
 
 async function api(path, options = {}) {
   const response = await fetch(`${API_URL}/api${path}`, {
@@ -21,16 +34,49 @@ async function api(path, options = {}) {
   return response.json()
 }
 
-/* ─── Componente: Carta ──────────────────────────────────────── */
-function Card({ card, faceDown = false, onClick, disabled = false }) {
-  if (faceDown) return <div className="card card-back" aria-label="Carta boca abajo"><span>TCG</span><small>COMBATE</small></div>
+/* ─── Componente: Carta con Diseño Oficial TCG ────────────────── */
+function Card({ card, faceDown = false, onClick, disabled = false, className = '' }) {
+  if (faceDown) {
+    return (
+      <div className={`card card-back ${className}`} aria-label="Carta boca abajo">
+        <img src={backCardImg} alt="Reverso de carta" className="card-back-img" />
+      </div>
+    )
+  }
+
+  const numSrc = NUM_IMAGES[card.power] || NUM_IMAGES[5]
+
   return (
-    <button className={`card card-${card.card_type}`} onClick={onClick} disabled={disabled} type="button" aria-label={`Usar ${card.name}`}>
-      <span className="card-topline"><span>{TYPE_ICONS[card.card_type]}</span><b>{TYPE_LABELS[card.card_type]}</b></span>
-      <span className="card-art">{card.name.split(' ').map((word) => word[0]).join('')}</span>
-      <strong>{card.name}</strong>
-      <small>{card.description}</small>
-      <span className="card-power"><span>PODER</span>{card.power}</span>
+    <button
+      className={`card card-${card.card_type} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+      type="button"
+      aria-label={`Usar ${card.name}, tipo ${card.card_type}, poder ${card.power}`}
+    >
+      {/* Insignia de poder en esquina superior derecha */}
+      <div className="card-corner-power power-tr" title={`Poder: ${card.power}`}>
+        <img src={numSrc} alt={`${card.power}`} className="card-num-img" />
+      </div>
+
+      {/* Ilustración de la carta */}
+      <div className="card-frame-inner">
+        {card.image_url ? (
+          <img src={card.image_url} alt={card.name} className="card-illustration-img" loading="lazy" />
+        ) : (
+          <div className="card-art-fallback">{card.name ? card.name.split(' ').map((w) => w[0]).join('') : 'OP'}</div>
+        )}
+
+        {/* Nombre del personaje */}
+        <div className="card-name-banner">
+          <span className="card-name-text">{card.name}</span>
+        </div>
+      </div>
+
+      {/* Insignia de poder en esquina inferior izquierda */}
+      <div className="card-corner-power power-bl" title={`Poder: ${card.power}`}>
+        <img src={numSrc} alt={`${card.power}`} className="card-num-img" />
+      </div>
     </button>
   )
 }
