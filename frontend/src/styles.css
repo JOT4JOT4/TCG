@@ -33,12 +33,32 @@ button:focus-visible {
 .app-shell {
   min-height: 100vh;
   padding: 0 4vw 48px;
-  background: radial-gradient(circle at 50% -10%, #342052 0, transparent 38%), linear-gradient(135deg, #100e1b, #17132a 55%, #100e1b);
+  background-color: #100e1b;
+  background-image: linear-gradient(rgba(10, 8, 20, 0.45), rgba(10, 8, 20, 0.65)), url('./assets/background-while-game.webp');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  color: #eedeff;
 }
 
 .topbar {
   height: 78px;
-  border-bottom: 1px solid #3c3453;
+  border-bottom: 1px solid rgba(135, 105, 175, 0.3);
+  background: rgba(16, 14, 27, 0.65);
+  backdrop-filter: blur(10px);
+  padding: 0 24px;
+  border-radius: 0 0 16px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -147,11 +167,12 @@ button:focus-visible {
 }
 
 .player-panel {
-  background: #19152a;
-  border: 1px solid #403655;
+  background: rgba(25, 21, 42, 0.82);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(135, 105, 175, 0.35);
   border-radius: 18px;
   padding: 20px 16px;
-  box-shadow: 0 18px 50px #09071166;
+  box-shadow: 0 18px 50px rgba(9, 7, 17, 0.7);
 }
 
 .player-heading {
@@ -253,9 +274,14 @@ button:focus-visible {
 
 .arena {
   min-height: 410px;
-  border: 1px solid #493b5f;
+  border: 1.5px solid rgba(135, 105, 175, 0.5);
   border-radius: 22px;
-  background: #191529aa;
+  background-color: #191529;
+  background-image: linear-gradient(180deg, rgba(16, 12, 28, 0.25) 0%, rgba(16, 12, 28, 0.1) 45%, rgba(16, 12, 28, 0.4) 100%), url('./assets/escenario-juego.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65), inset 0 0 45px rgba(0, 0, 0, 0.5);
   padding: 21px 28px 24px;
   position: relative;
   overflow: hidden;
@@ -275,6 +301,11 @@ button:focus-visible {
   align-items: center;
   color: #a89dbd;
   position: relative;
+  background: rgba(18, 14, 30, 0.65);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .arena-header>span:first-child {
@@ -310,13 +341,16 @@ button:focus-visible {
 .empty-field {
   width: 136px;
   height: 194px;
-  border: 1px dashed #594e6b;
+  border: 1.5px dashed rgba(255, 255, 255, 0.35);
+  background: rgba(16, 12, 28, 0.45);
+  backdrop-filter: blur(4px);
   border-radius: 12px;
   display: grid;
   place-items: center;
   align-content: center;
   gap: 9px;
-  color: #615774;
+  color: #d8cde9;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.45);
 }
 
 .empty-field span {
@@ -331,8 +365,20 @@ button:focus-visible {
 
 .versus {
   font-family: Georgia, serif;
-  color: #806d9c;
-  font-size: 1.1rem;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 14px rgba(190, 140, 255, 0.7);
+  background: rgba(18, 14, 30, 0.7);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgba(210, 175, 255, 0.4);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .action-row {
@@ -494,6 +540,12 @@ button.card:disabled {
 .hand-section {
   max-width: 1190px;
   margin: 40px auto 0;
+  background: rgba(18, 14, 30, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(135, 105, 175, 0.25);
+  border-radius: 20px;
+  padding: 20px 24px 28px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 .hand-header {

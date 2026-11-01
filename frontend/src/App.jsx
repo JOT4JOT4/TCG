@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import MainMenu from './MainMenu'
+import gameBg from './assets/background-while-game.webp'
+import arenaBg from './assets/escenario-juego.jpg'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -77,7 +79,10 @@ function GameScreen({ onBackToMenu }) {
   }, [game])
 
   if (!game) return (
-    <main className="app-shell loading-screen">
+    <main
+      className="app-shell loading-screen"
+      style={{ backgroundImage: `linear-gradient(rgba(10, 8, 20, 0.45), rgba(10, 8, 20, 0.65)), url(${gameBg})` }}
+    >
       <p>{error || 'Conectando con el servidor...'}</p>
       {error && <button className="primary-action" onClick={startGame} type="button">Reintentar</button>}
     </main>
@@ -90,7 +95,10 @@ function GameScreen({ onBackToMenu }) {
   }
 
   return (
-    <main className="app-shell">
+    <main
+      className="app-shell"
+      style={{ backgroundImage: `linear-gradient(rgba(10, 8, 20, 0.45), rgba(10, 8, 20, 0.65)), url(${gameBg})` }}
+    >
       <header className="topbar">
         <div className="brand"><span className="brand-mark">✦</span><span>ARCANA <b>DUEL</b></span></div>
         <div className="match-status"><span className="live-dot" /> PARTIDA EN CURSO <span className="round-pill">RONDA {game.round}</span></div>
@@ -106,7 +114,10 @@ function GameScreen({ onBackToMenu }) {
           <Life value={game.rival.life} label="VIDA" rival />
           <div className="zone-summary"><div><span>MAZO</span><strong>{game.rival.deck_count}</strong></div><div><span>CEMENTERIO</span><strong>{game.rival.graveyard_count}</strong></div></div>
         </aside>
-        <section className="arena">
+        <section
+          className="arena"
+          style={{ backgroundImage: `linear-gradient(180deg, rgba(16, 12, 28, 0.25) 0%, rgba(16, 12, 28, 0.1) 45%, rgba(16, 12, 28, 0.4) 100%), url(${arenaBg})` }}
+        >
           <div className="arena-header"><span>CAMPO DE BATALLA</span><span className="phase-label">{statusMessage}</span></div>
           <div className="field-row"><div className="field-slot">{fieldCard(game.fields.rival, 'rival')}</div><div className="versus">VS</div><div className="field-slot">{fieldCard(game.fields.player, 'player')}</div></div>
           <div className="action-row">
