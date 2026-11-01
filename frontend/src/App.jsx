@@ -81,6 +81,28 @@ function Card({ card, faceDown = false, onClick, disabled = false, className = '
   )
 }
 
+/* ─── Componentes UI ────*/
+function WoodScrew({ position = 'tl' }) {
+  return <span className={`wood-screw wood-screw-${position}`} aria-hidden="true" />
+}
+
+function WoodGameButton({ children, onClick, disabled = false, className = '', type = 'button' }) {
+  return (
+    <button
+      className={`wood-game-btn ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+      type={type}
+    >
+      <WoodScrew position="tl" />
+      <WoodScrew position="tr" />
+      <WoodScrew position="bl" />
+      <WoodScrew position="br" />
+      <span className="wood-game-btn-inner">{children}</span>
+    </button>
+  )
+}
+
 /* ─── Componente: Barra de vida ──────────────────────────────── */
 function Life({ value, label, rival = false }) {
   return (
@@ -129,14 +151,20 @@ function GameScreen({ onBackToMenu }) {
       className="app-shell loading-screen"
       style={{ backgroundImage: `linear-gradient(rgba(10, 8, 20, 0.45), rgba(10, 8, 20, 0.65)), url(${gameBg})` }}
     >
-      <p>{error || 'Conectando con el servidor...'}</p>
-      {error && <button className="primary-action" onClick={startGame} type="button">Reintentar</button>}
+      <div className="wood-loading-box">
+        <WoodScrew position="tl" />
+        <WoodScrew position="tr" />
+        <WoodScrew position="bl" />
+        <WoodScrew position="br" />
+        <p>{error || 'Convocando las cartas del océano...'}</p>
+        {error && <WoodGameButton onClick={startGame}>Reintentar</WoodGameButton>}
+      </div>
     </main>
   )
 
   const fieldCard = (card, side) => {
     if (game.phase === 'ready') return <Card faceDown />
-    if (!card) return <div className="empty-field"><span>+</span><small>{side === 'player' ? 'TU CARTA' : 'CARTA RIVAL'}</small></div>
+    if (!card) return <div className="empty-field"><span>⚔</span><small>{side === 'player' ? 'TU CARTA' : 'CARTA RIVAL'}</small></div>
     return game.phase === 'revealed' || game.phase === 'finished' ? <Card card={card} /> : <Card faceDown />
   }
 
@@ -146,47 +174,151 @@ function GameScreen({ onBackToMenu }) {
       style={{ backgroundImage: `linear-gradient(rgba(10, 8, 20, 0.45), rgba(10, 8, 20, 0.65)), url(${gameBg})` }}
     >
       <header className="topbar">
-        <div className="brand"><span className="brand-mark">✦</span><span>ARCANA <b>DUEL</b></span></div>
-        <div className="match-status"><span className="live-dot" /> PARTIDA EN CURSO <span className="round-pill">RONDA {game.round}</span></div>
+        <WoodScrew position="bl" />
+        <WoodScrew position="br" />
+        <div className="brand">
+          <span className="brand-title">
+            ONE PIECE <span className="brand-subtitle">ARCANA DUEL</span>
+          </span>
+        </div>
+        <div className="match-status">
+          <span className="match-status-text">DUELO EN ALTA MAR</span>
+          <span className="round-pill">RONDA {game.round}</span>
+        </div>
         <div className="topbar-actions">
-          <button className="restart-button" onClick={startGame} disabled={busy} type="button">↻ Reiniciar</button>
-          <button className="back-menu-button" onClick={onBackToMenu} type="button">← Menú Principal</button>
+          <WoodGameButton onClick={startGame} disabled={busy} className="wood-btn-sm-game">
+            ↻ Reiniciar
+          </WoodGameButton>
+          <WoodGameButton onClick={onBackToMenu} className="wood-btn-sm-game">
+            ← Menú
+          </WoodGameButton>
         </div>
       </header>
+
       {error && <div className="error-banner">{error}</div>}
+
       <section className="battle-layout">
         <aside className="player-panel rival-panel">
-          <div className="player-heading"><div className="avatar rival-avatar">R</div><div><span>OPONENTE</span><h2>Rival IA</h2></div></div>
+          <WoodScrew position="tl" />
+          <WoodScrew position="tr" />
+          <WoodScrew position="bl" />
+          <WoodScrew position="br" />
+          <div className="player-heading">
+            <div className="avatar rival-avatar">IA</div>
+            <div>
+              <span>OPONENTE</span>
+              <h2>Rival IA</h2>
+            </div>
+          </div>
           <Life value={game.rival.life} label="VIDA" rival />
-          <div className="zone-summary"><div><span>MAZO</span><strong>{game.rival.deck_count}</strong></div><div><span>CEMENTERIO</span><strong>{game.rival.graveyard_count}</strong></div></div>
+          <div className="zone-summary">
+            <div>
+              <span>MAZO</span>
+              <strong>{game.rival.deck_count}</strong>
+            </div>
+            <div>
+              <span>CEMENTERIO</span>
+              <strong>{game.rival.graveyard_count}</strong>
+            </div>
+          </div>
         </aside>
+
         <section
           className="arena"
           style={{ backgroundImage: `linear-gradient(180deg, rgba(16, 12, 28, 0.25) 0%, rgba(16, 12, 28, 0.1) 45%, rgba(16, 12, 28, 0.4) 100%), url(${arenaBg})` }}
         >
-          <div className="arena-header"><span>CAMPO DE BATALLA</span><span className="phase-label">{statusMessage}</span></div>
-          <div className="field-row"><div className="field-slot">{fieldCard(game.fields.rival, 'rival')}</div><div className="versus">VS</div><div className="field-slot">{fieldCard(game.fields.player, 'player')}</div></div>
+          <WoodScrew position="tl" />
+          <WoodScrew position="tr" />
+          <WoodScrew position="bl" />
+          <WoodScrew position="br" />
+          <div className="arena-header">
+            <span>CAMPO DE BATALLA</span>
+            <span className="phase-label">{statusMessage}</span>
+          </div>
+          <div className="field-row">
+            <div className="field-slot">{fieldCard(game.fields.rival, 'rival')}</div>
+            <div className="versus">VS</div>
+            <div className="field-slot">{fieldCard(game.fields.player, 'player')}</div>
+          </div>
           <div className="action-row">
-            {game.phase === 'ready' && <button className="primary-action" onClick={() => perform('reveal')} disabled={busy} type="button">Revelar cartas <span>→</span></button>}
-            {game.phase === 'revealed' && <button className="primary-action" onClick={() => perform('resolve')} disabled={busy} type="button">Resolver ronda <span>→</span></button>}
+            {game.phase === 'ready' && (
+              <WoodGameButton onClick={() => perform('reveal')} disabled={busy} className="wood-action-hero">
+                Revelar cartas <span>→</span>
+              </WoodGameButton>
+            )}
+            {game.phase === 'revealed' && (
+              <WoodGameButton onClick={() => perform('resolve')} disabled={busy} className="wood-action-hero">
+                Resolver ronda <span>→</span>
+              </WoodGameButton>
+            )}
             {game.phase === 'finished' && (
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button className="primary-action" onClick={startGame} disabled={busy} type="button">Nueva partida <span>↻</span></button>
-                <button className="primary-action" onClick={onBackToMenu} type="button">Volver al Menú <span>←</span></button>
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <WoodGameButton onClick={startGame} disabled={busy} className="wood-action-hero">
+                  Nueva partida <span>↻</span>
+                </WoodGameButton>
+                <WoodGameButton onClick={onBackToMenu} className="wood-action-hero">
+                  Volver al Menú <span>←</span>
+                </WoodGameButton>
               </div>
             )}
           </div>
         </section>
+
         <aside className="player-panel user-panel">
-          <div className="player-heading"><div className="avatar user-avatar">TÚ</div><div><span>JUGADOR</span><h2>Duelo Uno</h2></div></div>
+          <WoodScrew position="tl" />
+          <WoodScrew position="tr" />
+          <WoodScrew position="bl" />
+          <WoodScrew position="br" />
+          <div className="player-heading">
+            <div className="avatar user-avatar">TÚ</div>
+            <div>
+              <span>JUGADOR</span>
+              <h2>Capitán</h2>
+            </div>
+          </div>
           <Life value={game.player.life} label="VIDA" />
-          <div className="zone-summary"><div><span>MAZO</span><strong>{game.player.deck_count}</strong></div><div><span>CEMENTERIO</span><strong>{game.player.graveyard?.length || 0}</strong></div></div>
+          <div className="zone-summary">
+            <div>
+              <span>MAZO</span>
+              <strong>{game.player.deck_count}</strong>
+            </div>
+            <div>
+              <span>CEMENTERIO</span>
+              <strong>{game.player.graveyard?.length || 0}</strong>
+            </div>
+          </div>
         </aside>
       </section>
+
       <section className="hand-section">
-        <div className="hand-header"><div><span className="eyebrow">TU MANO</span><h2>Selecciona una carta</h2></div><span className="hand-count">{game.player.hand.length} CARTAS</span></div>
-        <div className="hand">{game.player.hand.map((card) => <Card key={card.id} card={card} onClick={() => perform('choice', { card_id: card.id })} disabled={busy || game.phase !== 'selecting'} />)}</div>
-        {game.phase === 'finished' && <div className="winner-banner">{game.winner === 'player' ? 'VICTORIA' : 'DERROTA'} <span>{game.winner === 'player' ? 'El campo es tuyo.' : 'Entrena y vuelve a intentarlo.'}</span></div>}
+        <WoodScrew position="tl" />
+        <WoodScrew position="tr" />
+        <WoodScrew position="bl" />
+        <WoodScrew position="br" />
+        <div className="hand-header">
+          <div>
+            <span className="eyebrow"> TU TRIPULACIÓN</span>
+            <h2>Selecciona una carta de tu mano</h2>
+          </div>
+          <span className="hand-count">{game.player.hand.length} CARTAS EN MANO</span>
+        </div>
+        <div className="hand">
+          {game.player.hand.map((card) => (
+            <Card
+              key={card.id}
+              card={card}
+              onClick={() => perform('choice', { card_id: card.id })}
+              disabled={busy || game.phase !== 'selecting'}
+            />
+          ))}
+        </div>
+        {game.phase === 'finished' && (
+          <div className={`winner-banner ${game.winner === 'player' ? 'banner-victory' : 'banner-defeat'}`}>
+            <span className="winner-skull">☠</span>
+            <h3>{game.winner === 'player' ? '¡VICTORIA PIRATA!' : '¡DERROTA EN EL MAR!'}</h3>
+            <p>{game.winner === 'player' ? 'El campo de batalla es tuyo, ¡has dominado el Grand Line!' : 'Tus cartas cayeron en combate. Entrena tu Haki y vuelve a zarpar.'}</p>
+          </div>
+        )}
       </section>
     </main>
   )

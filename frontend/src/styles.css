@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Cinzel:wght@600;700;900&display=swap');
+
 :root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #eeeaf9;
@@ -52,57 +54,78 @@ button:focus-visible {
   color: #eedeff;
 }
 
+/* ─── Pantalla de Juego: Marcos de Madera y Fuentes Piratas ──── */
 .topbar {
-  height: 78px;
-  border-bottom: 1px solid rgba(135, 105, 175, 0.3);
-  background: rgba(16, 14, 27, 0.65);
-  backdrop-filter: blur(10px);
+  position: relative;
+  height: 76px;
+  border: 3.5px solid #6b3e1f;
+  border-top: none;
+  outline: 1.5px solid #281206;
+  background: rgba(28, 16, 12, 0.72) !important;
+  backdrop-filter: blur(12px);
   padding: 0 24px;
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 18px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: 1500px;
   margin: auto;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), inset 0 -2px 0 #281206;
 }
 
 .brand {
-  color: #f3eaff;
-  font-size: 1rem;
-  letter-spacing: .14em;
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 12px;
+  user-select: none;
 }
 
-.brand b {
-  color: #cba3ff;
-  font-weight: 400;
+.brand-pirate-mark {
+  font-size: 1.85rem;
+  color: #f7b752;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9), 0 0 12px rgba(247, 183, 82, 0.5);
+  display: inline-block;
+  line-height: 1;
 }
 
-.brand-mark {
-  color: #edc8ff;
-  font-size: 1.5rem;
+.brand-title {
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  color: #fff4d9;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.match-status,
-.round-pill,
-.eyebrow,
-.phase-label,
-.hand-count,
-.zone-summary span,
-.life-label,
-.player-heading>div>span {
-  font-size: .67rem;
-  letter-spacing: .16em;
-  text-transform: uppercase;
+.brand-subtitle {
+  font-family: 'Cinzel', Impact, Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #f7b752;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 .match-status {
-  color: #a7a0bc;
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
+  background: rgba(45, 24, 12, 0.78);
+  border: 1.5px solid #824b25;
+  border-radius: 999px;
+  padding: 6px 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 230, 180, 0.2), 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.match-status-text {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #dfceb7;
+  text-transform: uppercase;
 }
 
 .live-dot {
@@ -114,22 +137,15 @@ button:focus-visible {
 }
 
 .round-pill {
-  color: #cfb2ed;
-  border: 1px solid #604876;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffeed1;
+  background: #603416;
+  border: 1.5px solid #a06233;
   border-radius: 999px;
-  padding: 7px 12px;
-  letter-spacing: .1em;
-}
-
-.restart-button {
-  color: #aaa3ba;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.restart-button:hover {
-  color: #fff;
+  padding: 4px 10px;
+  letter-spacing: 1.5px;
 }
 
 .topbar-actions {
@@ -138,152 +154,248 @@ button:focus-visible {
   align-items: center;
 }
 
-.back-menu-button {
-  background: #361b0c;
-  color: #fff8ee;
-  border: 1.5px solid #824b25;
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-family: 'Arial Black', Impact, sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+/* ─── Botones de Madera en Pantalla de Juego ──────────── */
+.wood-game-btn {
+  position: relative;
+  background: #804a25;
+  border: 2.5px solid #a06233;
+  outline: 2px solid #381908;
+  border-radius: 12px;
   cursor: pointer;
+  padding: 3px 5px;
+  box-sizing: border-box;
   transition: transform 0.12s ease, filter 0.12s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.back-menu-button:hover {
-  filter: brightness(1.2);
-  transform: translateY(-1px);
+.wood-game-btn:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
 }
 
+.wood-game-btn:active:not(:disabled) {
+  filter: brightness(0.92);
+  transform: translateY(1px);
+}
+
+.wood-game-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.wood-game-btn-inner {
+  width: 100%;
+  height: 100%;
+  background: #3e200e;
+  border-radius: 7px;
+  border: 1.5px solid #1c0a02;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px 14px;
+  box-sizing: border-box;
+  color: #fff6e6;
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  font-size: 1.15rem;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  text-transform: uppercase;
+}
+
+.wood-btn-sm-game {
+  height: 40px;
+}
+
+.wood-btn-sm-game .wood-game-btn-inner {
+  padding: 3px 12px;
+  font-size: 1rem;
+}
+
+.wood-action-hero {
+  min-height: 52px;
+  min-width: 210px;
+}
+
+.wood-action-hero .wood-game-btn-inner {
+  padding: 8px 24px;
+  font-size: 1.35rem;
+  letter-spacing: 2px;
+  color: #ffeed1;
+}
+
+.wood-action-hero .wood-game-btn-inner span {
+  font-size: 1.4rem;
+  color: #f7b752;
+}
+
+/* ─── Disposición de Batalla ─────────────────────────── */
 .battle-layout {
   max-width: 1500px;
-  margin: 38px auto 0;
+  margin: 36px auto 0;
   display: grid;
-  grid-template-columns: 190px minmax(450px, 1fr) 190px;
-  gap: 32px;
+  grid-template-columns: 200px minmax(450px, 1fr) 200px;
+  gap: 28px;
   align-items: center;
 }
 
+/* Paneles de Jugador y Rival: Marco de madera con fondo translúcido */
 .player-panel {
-  background: rgba(25, 21, 42, 0.82);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(135, 105, 175, 0.35);
+  position: relative;
+  background: rgba(24, 16, 28, 0.65) !important;
+  backdrop-filter: blur(14px);
+  border: 3.5px solid #6b3e1f !important;
+  outline: 2px solid #281206;
   border-radius: 18px;
-  padding: 20px 16px;
-  box-shadow: 0 18px 50px rgba(9, 7, 17, 0.7);
+  padding: 22px 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), inset 0 0 25px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
 }
 
 .player-heading {
   display: flex;
-  gap: 11px;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
+}
+
+.player-heading span {
+  font-family: 'Cinzel', Georgia, serif;
+  color: #caa374;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: block;
 }
 
 .player-heading h2 {
-  font-family: Georgia, serif;
-  font-weight: 400;
-  font-size: 1.08rem;
-  margin: 4px 0 0;
-}
-
-.player-heading>div>span {
-  color: #9186a6;
-  font-size: .56rem;
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  font-size: 1.5rem;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
 }
 
 .avatar {
   display: grid;
   place-items: center;
-  width: 39px;
-  height: 39px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  font-size: .68rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .rival-avatar {
-  background: #392237;
-  color: #eea6be;
+  background: radial-gradient(circle, #661822 0%, #30080d 100%);
+  border: 2px solid #b71c1c;
+  color: #ffccd5;
 }
 
 .user-avatar {
-  background: #2c315d;
-  color: #aeb9ff;
-  font-size: .56rem;
+  background: radial-gradient(circle, #1a4268 0%, #0c2034 100%);
+  border: 2px solid #2980b9;
+  color: #cce6ff;
+}
+
+.life-block {
+  background: rgba(30, 16, 10, 0.6);
+  border: 1.5px solid #5a3014;
+  border-radius: 10px;
+  padding: 8px 10px;
 }
 
 .life-label {
   display: flex;
   justify-content: space-between;
-  color: #a8a1b6;
-  margin-bottom: 8px;
-  font-size: .58rem;
+  align-items: center;
+  color: #d4a373;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
 }
 
 .life-label strong {
-  color: #efc6de;
-  font-weight: 500;
-  letter-spacing: .05em;
+  font-family: 'Pirata One', Georgia, serif;
+  font-size: 1.2rem;
+  color: #ffeed1;
+  letter-spacing: 1px;
 }
 
 .life-bar {
-  height: 5px;
-  background: #362d48;
-  border-radius: 9px;
+  height: 8px;
+  background: #241108;
+  border: 1px solid #4a2811;
+  border-radius: 999px;
   overflow: hidden;
+  padding: 1px;
 }
 
 .life-bar span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #cc719f, #f3b1d2);
+  background: linear-gradient(90deg, #38a169, #4ade80);
   border-radius: inherit;
-  transition: width .4s ease;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+  transition: width 0.4s ease;
 }
 
-.user-panel .life-bar span {
-  background: linear-gradient(90deg, #8675d8, #c4aeff);
+.life-bar span.rival-life {
+  background: linear-gradient(90deg, #b71c1c, #ff5252);
+  box-shadow: 0 0 8px rgba(255, 82, 82, 0.6);
 }
 
 .zone-summary {
   display: flex;
   justify-content: space-between;
-  margin-top: 27px;
-  padding-top: 16px;
-  border-top: 1px solid #393149;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1.5px solid #4a2914;
 }
 
 .zone-summary div {
   display: grid;
-  gap: 5px;
+  gap: 4px;
+  text-align: center;
 }
 
 .zone-summary span {
-  color: #7e7593;
-  font-size: .52rem;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #caa374;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
 .zone-summary strong {
-  font-size: 1.1rem;
+  font-family: 'Pirata One', Georgia, serif;
+  font-size: 1.6rem;
   font-weight: 400;
-  color: #ddd2ed;
+  color: #fff6e8;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
 }
 
+/* ─── Arena de Combate con Marco de Madera y Fondo Escenario ──── */
 .arena {
-  min-height: 410px;
-  border: 1.5px solid rgba(135, 105, 175, 0.5);
+  position: relative;
+  min-height: 420px;
+  border: 4px solid #733e1c !important;
+  outline: 2.5px solid #281206;
   border-radius: 22px;
-  background-color: #191529;
-  background-image: linear-gradient(180deg, rgba(16, 12, 28, 0.25) 0%, rgba(16, 12, 28, 0.1) 45%, rgba(16, 12, 28, 0.4) 100%), url('./assets/escenario-juego.jpg');
+  background-color: transparent !important;
+  background-image: linear-gradient(180deg, rgba(16, 12, 28, 0.2) 0%, rgba(16, 12, 28, 0.05) 45%, rgba(16, 12, 28, 0.35) 100%), url('./assets/escenario-juego.jpg') !important;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65), inset 0 0 45px rgba(0, 0, 0, 0.5);
-  padding: 21px 28px 24px;
-  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 0 50px rgba(0, 0, 0, 0.55);
+  padding: 22px 28px 24px;
   overflow: hidden;
 }
 
@@ -291,35 +403,40 @@ button:focus-visible {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, #8054b014, transparent 57%);
+  background: radial-gradient(circle at 50% 50%, rgba(128, 84, 176, 0.08), transparent 60%);
   pointer-events: none;
 }
 
 .arena-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #a89dbd;
-  position: relative;
-  background: rgba(18, 14, 30, 0.65);
+  background: rgba(36, 18, 9, 0.82) !important;
   backdrop-filter: blur(8px);
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 2px solid #824b25 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 230, 180, 0.2);
 }
 
-.arena-header>span:first-child {
-  font-family: Georgia, serif;
-  color: #e5dff0;
-  letter-spacing: .1em;
-  font-size: .83rem;
+.arena-header > span:first-child {
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  color: #ffebc2;
+  letter-spacing: 2px;
+  font-size: 1.25rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .phase-label {
-  color: #aa96c7;
-  letter-spacing: .08em;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #ffeed1;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-align: right;
-  max-width: 55%;
+  max-width: 58%;
+  text-shadow: 0 1px 3px #000;
 }
 
 .field-row {
@@ -341,74 +458,83 @@ button:focus-visible {
 .empty-field {
   width: 136px;
   height: 194px;
-  border: 1.5px dashed rgba(255, 255, 255, 0.35);
-  background: rgba(16, 12, 28, 0.45);
-  backdrop-filter: blur(4px);
+  border: 2px dashed rgba(212, 163, 115, 0.55);
+  background: rgba(22, 14, 28, 0.45);
+  backdrop-filter: blur(6px);
   border-radius: 12px;
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 9px;
-  color: #d8cde9;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.45);
+  gap: 8px;
+  color: #f7d59b;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .empty-field span {
-  font-size: 2rem;
-  font-weight: 200;
+  font-size: 2.2rem;
+  opacity: 0.85;
 }
 
 .empty-field small {
-  font-size: .55rem;
-  letter-spacing: .13em;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #eed6b0;
 }
 
 .versus {
-  font-family: Georgia, serif;
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 14px rgba(190, 140, 255, 0.7);
-  background: rgba(18, 14, 30, 0.7);
-  width: 46px;
-  height: 46px;
+  font-family: 'Pirata One', Georgia, serif;
+  color: #ffd700;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95), 0 0 10px rgba(255, 215, 0, 0.5);
+  background: radial-gradient(circle, #7a3e1a 0%, #3a1c0b 100%);
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  border: 1.5px solid rgba(210, 175, 255, 0.4);
+  border: 2.5px solid #d4a373;
+  outline: 1.5px solid #240f04;
   backdrop-filter: blur(6px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 230, 180, 0.4);
 }
 
 .action-row {
-  min-height: 42px;
+  min-height: 54px;
   display: grid;
   place-items: center;
   position: relative;
+  margin-top: 8px;
 }
 
-.primary-action {
-  color: #161120;
-  border: 0;
-  border-radius: 7px;
-  padding: 12px 21px;
-  background: #d7b7f1;
-  cursor: pointer;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .04em;
-  box-shadow: 0 5px 20px #d7b7f133;
+/* Caja de Carga en Pantalla de Espera */
+.wood-loading-box {
+  position: relative;
+  background: rgba(30, 18, 12, 0.85);
+  border: 3.5px solid #6b3e1f;
+  outline: 2px solid #281206;
+  border-radius: 18px;
+  padding: 36px 42px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+  max-width: 420px;
 }
 
-.primary-action:hover {
-  background: #ebd8ff;
-  transform: translateY(-1px);
+.wood-loading-box .brand-pirate-mark {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
 }
 
-.primary-action span {
-  margin-left: 12px;
-  font-size: 1.1rem;
+.wood-loading-box p {
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  font-size: 1.4rem;
+  letter-spacing: 1.5px;
+  color: #ffeed1;
+  margin: 0 0 16px;
 }
 
 /* ─── Carta Oficial One Piece TCG ────────────────────────────── */
@@ -599,39 +725,54 @@ button.card:disabled {
   pointer-events: none;
 }
 
+/* ─── Sección de Mano con Marco de Madera y Fondo Translúcido ──── */
 .hand-section {
+  position: relative;
   max-width: 1190px;
-  margin: 40px auto 0;
-  background: rgba(18, 14, 30, 0.6);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(135, 105, 175, 0.25);
+  margin: 36px auto 0;
+  background: rgba(20, 14, 28, 0.65) !important;
+  backdrop-filter: blur(12px);
+  border: 3.5px solid #6b3e1f !important;
+  outline: 2px solid #281206;
   border-radius: 20px;
-  padding: 20px 24px 28px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  padding: 22px 26px 28px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), inset 0 0 25px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
 }
 
 .hand-header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
-  border-bottom: 1px solid #3d3452;
-  padding-bottom: 15px;
+  align-items: flex-end;
+  border-bottom: 1.5px solid #4a2914;
+  padding-bottom: 14px;
 }
 
 .eyebrow {
-  color: #a898be;
+  color: #f7b752;
   margin: 0;
-  font-size: .6rem;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
 }
 
 .hand-header h2 {
-  margin: 7px 0 0;
-  font: 400 1.4rem Georgia, serif;
+  margin: 4px 0 0;
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  font-size: 1.65rem;
+  letter-spacing: 1.5px;
+  color: #fff6e8;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .hand-count {
-  color: #8c819f;
-  font-size: .57rem;
+  font-family: 'Cinzel', Georgia, serif;
+  color: #caa374;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
 .hand {
@@ -642,18 +783,58 @@ button.card:disabled {
   flex-wrap: wrap;
 }
 
+/* ─── Banner de Victoria / Derrota Pirata ────────────── */
 .winner-banner {
-  margin: 27px auto 0;
+  margin: 28px auto 0;
   text-align: center;
-  font: 400 1.4rem Georgia, serif;
-  color: #e5b9ff;
+  padding: 20px 28px;
+  border-radius: 16px;
+  border: 2.5px solid #824b25;
+  background: rgba(36, 18, 9, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 230, 180, 0.2);
+  max-width: 540px;
 }
 
-.winner-banner span {
+.winner-skull {
+  font-size: 2.6rem;
   display: block;
-  margin-top: 5px;
-  color: #978ca8;
-  font: .72rem Inter, sans-serif;
+  margin-bottom: 4px;
+}
+
+.winner-banner h3 {
+  font-family: 'Pirata One', 'Cinzel', Georgia, serif;
+  font-size: 2.3rem;
+  margin: 0;
+  letter-spacing: 3px;
+}
+
+.banner-victory h3 {
+  color: #ffd700;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.95), 0 0 18px rgba(255, 215, 0, 0.6);
+}
+
+.banner-victory .winner-skull {
+  color: #ffd700;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+}
+
+.banner-defeat h3 {
+  color: #ff5252;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.95), 0 0 18px rgba(255, 82, 82, 0.6);
+}
+
+.banner-defeat .winner-skull {
+  color: #ff5252;
+  filter: drop-shadow(0 0 10px rgba(255, 82, 82, 0.6));
+}
+
+.winner-banner p {
+  margin: 8px 0 0;
+  color: #ecd5b8;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
 }
 
 @media (max-width: 980px) {
