@@ -439,7 +439,7 @@ function GalleryPanel({ onClose }) {
 }
 
 /* ─── Componente Principal: Main Menu ────────────────────────── */
-export default function MainMenu({ onPlay, musicVol, sfxVol, onMusicChange, onSfxChange }) {
+export default function MainMenu({ onPlay, onProfile, musicVol, sfxVol, onMusicChange, onSfxChange }) {
   const [panel, setPanel] = useState(null) // null | 'options' | 'credits' | 'gallery'
 
   const closePanel = () => setPanel(null)
@@ -477,6 +477,7 @@ export default function MainMenu({ onPlay, musicVol, sfxVol, onMusicChange, onSf
           {/* Lista de 4 botones de madera */}
           <nav className="wood-btn-list" aria-label="Menú principal">
             <WoodButton onClick={onPlay}>JUGAR</WoodButton>
+            <WoodButton onClick={onProfile}>Mi Perfil</WoodButton>
             <WoodButton onClick={() => setPanel('gallery')}>CARTAS</WoodButton>
             <WoodButton onClick={() => setPanel('options')}>OPCIONES</WoodButton>
             <WoodButton onClick={() => setPanel('credits')}>CRÉDITOS</WoodButton>

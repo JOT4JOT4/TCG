@@ -1867,6 +1867,300 @@ button.card:disabled {
   transform: translateY(-1px);
 }
 
+
+.player-profile {
+  min-height: 100vh;
+  padding: 30px;
+  background: #151020;
+  color: #f5e9d0;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-header button {
+  padding: 12px 20px;
+  background: #76512f;
+  color: white;
+  border: 1px solid #bd9051;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.profile-content {
+  max-width: 950px;
+  margin: 55px auto;
+}
+
+.profile-info,
+.profile-decks {
+  margin-top: 25px;
+  padding: 30px;
+  border: 1px solid #756044;
+  background: #241c2c;
+  border-radius: 15px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #76512f;
+  font-size: 32px;
+}
+
+.profile-info h3 {
+  margin: 8px 0;
+  font-size: 25px;
+}
+
+.profile-decks p {
+  color: #c4b8a4;
+}
+
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.deck-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.deck-form input {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px;
+  border: 1px solid #756044;
+  border-radius: 8px;
+  background: #151020;
+  color: #f5e9d0;
+}
+
+.deck-form button {
+  padding: 12px 20px;
+  border: 1px solid #bd9051;
+  border-radius: 8px;
+  background: #76512f;
+  color: white;
+  cursor: pointer;
+}
+
+.deck-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deck-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.deck-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #756044;
+  border-radius: 8px;
+}
+
+button.deck-item {
+  width: 100%;
+  background: #241c2c;
+  color: #f5e9d0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+button.deck-item:hover {
+  background: #36283c;
+  border-color: #bd9051;
+}
+
+button.deck-item.deck-selected {
+  border-color: #e1b86b;
+  background: #392c35;
+}
+
+.deck-details {
+  margin-top: 25px;
+  padding: 25px;
+  background: #191522;
+  border: 1px solid #756044;
+  border-radius: 12px;
+}
+
+.deck-details h2 {
+  margin-top: 0;
+  color: #f5e9d0;
+}
+
+.deck-details p {
+  color: #c4b8a4;
+}
+
+.deck-details button {
+  margin-top: 12px;
+  padding: 10px 18px;
+  background: #76512f;
+  border: 1px solid #bd9051;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.deck-editor-current {
+  padding: 20px;
+  margin: 20px 0 30px;
+  border: 1px solid #756044;
+  border-radius: 10px;
+  background: #241c2c;
+}
+
+.deck-editor-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.deck-editor-filters button {
+  padding: 10px 18px;
+  border: 1px solid #756044;
+  border-radius: 8px;
+  background: #241c2c;
+  color: #f5e9d0;
+  cursor: pointer;
+}
+
+.deck-editor-filters button.active {
+  background: #76512f;
+  border-color: #e1b86b;
+}
+
+.deck-editor-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #756044;
+  border-radius: 8px;
+  background: #151020;
+  color: #f5e9d0;
+}
+
+.deck-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.deck-editor-card {
+  overflow: hidden;
+  border: 1px solid #756044;
+  border-radius: 10px;
+  background: #241c2c;
+}
+
+.deck-editor-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.deck-editor-no-image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  color: #c4b8a4;
+}
+
+.deck-editor-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+}
+
+.deck-editor-card-info span {
+  color: #c4b8a4;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.deck-add-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: #76512f;
+  color: #ffffff;
+  border: 1px solid #bd9051;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.deck-add-button:hover:not(:disabled) {
+  background: #94643a;
+}
+
+.deck-add-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.deck-save-error {
+  color: #ffb0a5;
+  margin: 12px 0;
+}
+
+.deck-remove-button {
+  width: 100%;
+  padding: 9px;
+  margin-top: 8px;
+  background: #562c32;
+  color: #ffffff;
+  border: 1px solid #b36b74;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.deck-remove-button:hover:not(:disabled) {
+  background: #763940;
+}
+
+.deck-remove-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 @media (max-width: 580px) {
   .card-detail-grid {
     grid-template-columns: 1fr;

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import MainMenu from './MainMenu'
+import PLayerProfile from './PlayerProfile'
 import gameBg from './assets/background-while-game.webp'
 import arenaBg from './assets/escenario-juego.jpg'
 import backCardImg from './assets/backcard.png'
@@ -326,7 +327,7 @@ function GameScreen({ onBackToMenu }) {
 
 /* ─── App raíz ───────────────────────────────────────────────── */
 export default function App() {
-  const [screen, setScreen] = useState('menu') // 'menu' | 'game'
+  const [screen, setScreen] = useState('menu') // 'menu' | 'game' | 'profile'
   const [musicVol, setMusicVol] = useState(70)
   const [sfxVol, setSfxVol] = useState(80)
 
@@ -334,11 +335,18 @@ export default function App() {
     return (
       <MainMenu
         onPlay={() => setScreen('game')}
+        onProfile={() => setScreen('profile')}
         musicVol={musicVol}
         sfxVol={sfxVol}
         onMusicChange={setMusicVol}
         onSfxChange={setSfxVol}
       />
+    )
+  }
+
+  if (screen === 'profile') {
+    return (
+      <PLayerProfile onBack={() => setScreen('menu')} />
     )
   }
 

@@ -171,6 +171,28 @@ def add_card_to_deck(
     deck_card = db.scalar(
         select(DeckCard).where(DeckCard.deck_id == deck_id, DeckCard.card_id == payload.card_id)
     )
+    deck_cards = list(
+        db.scalars(
+            select(DeckCard).where(DeckCard.deck_id == deck_id)
+        )
+    )
+    total_actual = sum(
+        item.quantity for item in deck_cards
+    )
+    cantidad_anterior = (
+        deck_card.quantity if deck_card is not None else 0
+    )
+
+    nuevo_total = (
+        total_actual - cantidad_anterior + payload.quantity
+    )
+
+    if nuevo_total > 12:
+        raise HTTPException(
+            status_code=400,
+            detail="El mazo no puede superar las 12 cartas"
+        )
+
     if deck_card is None:
         deck_card = DeckCard(deck_id=deck_id, **payload.model_dump())
         db.add(deck_card)
@@ -186,6 +208,37 @@ def list_deck_cards(deck_id: int, db: Session = Depends(get_db)) -> list[DeckCar
     if db.get(Deck, deck_id) is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     return list(db.scalars(select(DeckCard).where(DeckCard.deck_id == deck_id).order_by(DeckCard.id)))
+
+
+@router.delete(
+    "/decks/{deck_id}/cards/{card_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def remove_card_from_deck(
+    deck_id: int,
+    card_id: int,
+    db: Session = Depends(get_db),
+) -> None:
+    if db.get(Deck, deck_id) is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Deck not found",
+        )
+
+    deck_card = db.scalar(
+        select(DeckCard).where(
+            DeckCard.deck_id == deck_id,
+            DeckCard.card_id == card_id,
+        )
+    )
+
+    if deck_card is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Card not found in deck",
+        )
+    db.delete(deck_card)
+    db.commit()
 
 
 @router.post("/matches", response_model=MatchRead, status_code=status.HTTP_201_CREATED)
