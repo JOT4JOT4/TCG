@@ -158,7 +158,7 @@ function CreditsPanel({ onClose }) {
         <div className="wood-modal-body wood-credits-body">
           <div className="wood-credit-block">
             <span className="wood-credit-role">Diseño &amp; Desarrollo</span>
-            <strong className="wood-credit-name">Diego Adaos - Juan Pablo Vargas - Cristobal Luna</strong>
+            <strong className="wood-credit-name">Diego Adaos - Juan Pablo Vargas - Cristóbal Luna</strong>
           </div>
           <div className="wood-credit-block">
             <span className="wood-credit-role">Arte Oficial</span>
@@ -471,7 +471,7 @@ export default function MainMenu({ onPlay, onProfile, musicVol, sfxVol, onMusicC
             <WoodScrew position="tr" />
             <WoodScrew position="bl" />
             <WoodScrew position="br" />
-            <span className="wood-header-title">MENU</span>
+            <span className="wood-header-title">MENÚ</span>
           </div>
 
           {/* Lista de 4 botones de madera */}
