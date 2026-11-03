@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import soundManager from './soundManager'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -86,12 +87,12 @@ export default function DeckEditor({ deck }) {
 
   const cardsInDeck = deckCards.map(item => {
     const cardInfo = cards.find(
-        card => card.id === item.card_id
+      card => card.id === item.card_id
     )
 
     return {
-        ...item,
-        card: cardInfo
+      ...item,
+      card: cardInfo
     }
   })
 
@@ -100,77 +101,78 @@ export default function DeckEditor({ deck }) {
     0
   )
 
-    
-    async function addCard(card) {
-        if (savingCard || loadingDeck || deckError) return
 
-        const existingCard = deckCards.find(
-            item => item.card_id === card.id
-        )
-
-        const currentQuantity = existingCard?.quantity ?? 0
-
-
-        if (totalDeckCards >= 12) {
-            setSaveError('El mazo ya tiene 12 cartas')
-            return
-        }
-        if (currentQuantity >= 4) {
-            setSaveError('Máximo 4 copias por carta')
-            return
-        }
-
-        setSavingCard(true)
-        setSaveError('')
-
-        try {
-            const response = await fetch(
-            `${API_URL}/api/decks/${deck.id}/cards`,
-            {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                card_id: card.id,
-                quantity: currentQuantity + 1
-                })
-            }
-            )
-
-            if (!response.ok) {
-            throw new Error('No se pudo agregar la carta')
-            }
-
-            const savedCard = await response.json()
-
-            setDeckCards(previous => {
-            const exists = previous.some(
-                item => item.card_id === card.id
-            )
-
-            if (exists) {
-                return previous.map(item =>
-                item.card_id === card.id ? savedCard : item
-                )
-            }
-
-            return [...previous, savedCard]
-            })
-
-        } catch (err) {
-            setSaveError(err.message)
-        } finally {
-            setSavingCard(false)
-        }
-    }
-
-  
-    async function removeCard(cardId) {
+  async function addCard(card) {
     if (savingCard || loadingDeck || deckError) return
 
     const existingCard = deckCards.find(
-        item => item.card_id === cardId
+      item => item.card_id === card.id
+    )
+
+    const currentQuantity = existingCard?.quantity ?? 0
+
+
+    if (totalDeckCards >= 12) {
+      setSaveError('El mazo ya tiene 12 cartas')
+      return
+    }
+    if (currentQuantity >= 4) {
+      setSaveError('Máximo 4 copias por carta')
+      return
+    }
+
+    setSavingCard(true)
+    setSaveError('')
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/decks/${deck.id}/cards`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            card_id: card.id,
+            quantity: currentQuantity + 1
+          })
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('No se pudo agregar la carta')
+      }
+
+      const savedCard = await response.json()
+      soundManager.playCardPlace()
+
+      setDeckCards(previous => {
+        const exists = previous.some(
+          item => item.card_id === card.id
+        )
+
+        if (exists) {
+          return previous.map(item =>
+            item.card_id === card.id ? savedCard : item
+          )
+        }
+
+        return [...previous, savedCard]
+      })
+
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSavingCard(false)
+    }
+  }
+
+
+  async function removeCard(cardId) {
+    if (savingCard || loadingDeck || deckError) return
+
+    const existingCard = deckCards.find(
+      item => item.card_id === cardId
     )
 
     if (!existingCard) return
@@ -179,55 +181,61 @@ export default function DeckEditor({ deck }) {
     setSaveError('')
 
     try {
-        let response
+      let response
 
-        if (existingCard.quantity > 1) {
+
+
+      if (existingCard.quantity > 1) {
         response = await fetch(
-            `${API_URL}/api/decks/${deck.id}/cards`,
-            {
+          `${API_URL}/api/decks/${deck.id}/cards`,
+          {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                card_id: cardId,
-                quantity: existingCard.quantity - 1
+              card_id: cardId,
+              quantity: existingCard.quantity - 1
             })
-            }
+          }
         )
-        } else {
+      } else {
         response = await fetch(
-            `${API_URL}/api/decks/${deck.id}/cards/${cardId}`,
-            {
+          `${API_URL}/api/decks/${deck.id}/cards/${cardId}`,
+          {
             method: 'DELETE'
-            }
+          }
         )
-        }
+      }
 
-        if (!response.ok) {
+      if (!response.ok) {
         throw new Error('No se pudo quitar la carta')
-        }
+      }
 
-        if (existingCard.quantity > 1) {
+      soundManager.playCardRemove()
+
+
+
+      if (existingCard.quantity > 1) {
         const updatedCard = await response.json()
 
         setDeckCards(previous =>
-            previous.map(item =>
+          previous.map(item =>
             item.card_id === cardId ? updatedCard : item
-            )
+          )
         )
-        } else {
+      } else {
         setDeckCards(previous =>
-            previous.filter(item => item.card_id !== cardId)
+          previous.filter(item => item.card_id !== cardId)
         )
-        }
+      }
 
     } catch (err) {
-        setSaveError(err.message)
+      setSaveError(err.message)
     } finally {
-        setSavingCard(false)
+      setSavingCard(false)
     }
-    }
+  }
 
   const filteredCards = cards.filter(card => {
     const matchesType =
@@ -245,79 +253,79 @@ export default function DeckEditor({ deck }) {
     <div className="deck-editor">
       <h2>Editar: {deck.name}</h2>
 
-      
-        <div className="deck-editor-current">
+
+      <div className="deck-editor-current">
         <h3>Cartas de mi mazo</h3>
 
         <p>{totalDeckCards} / 12 cartas</p>
 
         <progress
-            value={totalDeckCards}
-            max={12}
-            style={{ width: '100%' }}
+          value={totalDeckCards}
+          max={12}
+          style={{ width: '100%' }}
         />
 
         {loadingDeck && <p>Cargando mazo...</p>}
 
         {deckError && (
-            <p role="alert">{deckError}</p>
+          <p role="alert">{deckError}</p>
         )}
 
         {!loadingDeck && !deckError && deckCards.length === 0 && (
-            <p>
+          <p>
             Este mazo todavía no tiene cartas.
             Selecciona cartas del catálogo inferior
             para comenzar a construirlo.
-            </p>
+          </p>
         )}
 
         {!loadingDeck && !deckError && deckCards.length > 0 && (
-            <div className="deck-editor-grid">
+          <div className="deck-editor-grid">
             {cardsInDeck.map(item => (
-                <div className="deck-editor-card" key={item.card_id}>
+              <div className="deck-editor-card" key={item.card_id}>
                 {item.card?.image_url ? (
-                    <img
+                  <img
                     src={item.card.image_url}
                     alt={item.card.name}
                     loading="lazy"
-                    />
+                  />
                 ) : (
-                    <div className="deck-editor-no-image">
+                  <div className="deck-editor-no-image">
                     Sin imagen
-                    </div>
+                  </div>
                 )}
-                    <div className="deck-editor-card-info">
-                    <strong>
-                        {item.card?.name || `Carta #${item.card_id}`}
-                    </strong>
+                <div className="deck-editor-card-info">
+                  <strong>
+                    {item.card?.name || `Carta #${item.card_id}`}
+                  </strong>
 
-                    <span>
-                        {item.card?.card_type || 'Tipo desconocido'}
-                        {item.card && ` · Poder ${item.card.power}`}
-                    </span>
+                  <span>
+                    {item.card?.card_type || 'Tipo desconocido'}
+                    {item.card && ` · Poder ${item.card.power}`}
+                  </span>
 
-                    <span>Copias: {item.quantity}</span>
+                  <span>Copias: {item.quantity}</span>
 
-                    <button
-                        type="button"
-                        className="deck-remove-button"
-                        onClick={() => removeCard(item.card_id)}
-                        disabled={savingCard || loadingDeck || !!deckError}
-                    >
-                        - Quitar
-                    </button>
-                    </div>
+                  <button
+                    type="button"
+                    className="deck-remove-button"
+                    onClick={() => removeCard(item.card_id)}
+                    disabled={savingCard || loadingDeck || !!deckError}
+                  >
+                    - Quitar
+                  </button>
                 </div>
+              </div>
             ))}
-            </div>
+          </div>
         )}
-        </div>
+      </div>
 
-        {saveError && (
-            <p role = "alert" className = "deck-save-error">
-              {saveError}
-            </p>
-        )}
+      {saveError && (
+        <p role="alert" className="deck-save-error">
+          {saveError}
+        </p>
+      )}
 
       <h3>Catálogo de cartas</h3>
 
@@ -327,7 +335,7 @@ export default function DeckEditor({ deck }) {
             key={option.value}
             type="button"
             className={filter === option.value ? 'active' : ''}
-            onClick={() => setFilter(option.value)}
+            onClick={() => { soundManager.playCardTake(); setFilter(option.value); }}
           >
             {option.label}
           </button>
@@ -365,30 +373,30 @@ export default function DeckEditor({ deck }) {
                     Sin imagen
                   </div>
                 )}
-                
+
                 <div className="deck-editor-card-info">
-                <strong>{card.name}</strong>
+                  <strong>{card.name}</strong>
 
-                <span>
+                  <span>
                     {card.card_type} · Poder {card.power}
-                </span>
+                  </span>
 
-                <button
+                  <button
                     type="button"
                     className="deck-add-button"
                     onClick={() => addCard(card)}
                     disabled={
-                    savingCard ||
-                    loadingDeck ||
-                    !!deckError ||
-                    totalDeckCards >= 12 ||
-                    (deckCards.find(
+                      savingCard ||
+                      loadingDeck ||
+                      !!deckError ||
+                      totalDeckCards >= 12 ||
+                      (deckCards.find(
                         item => item.card_id === card.id
-                    )?.quantity ?? 0) >= 4
+                      )?.quantity ?? 0) >= 4
                     }
-                >
+                  >
                     + Agregar
-                </button>
+                  </button>
                 </div>
               </div>
             ))}

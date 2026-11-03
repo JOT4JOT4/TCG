@@ -1,11 +1,13 @@
 
 import { useEffect, useState } from 'react'
 import DeckEditor from './DeckEditor.jsx'
+import soundManager from './soundManager'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 export default function PlayerProfile({ onBack }) {
   const [player, setPlayer] = useState(null)
+  const [playersList, setPlayersList] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [deckName, setDeckName] = useState('')
@@ -31,10 +33,12 @@ export default function PlayerProfile({ onBack }) {
         }
 
         // Seleccionamos el usuario de prueba con ID 1
-        const selectedPlayer = players.find(p => p.id === 1)
+        setPlayersList(players)
+
+        const selectedPlayer = players.find(p => p.id === 1) || players[0]
 
         if (!selectedPlayer) {
-          throw new Error('No se encontró el jugador con ID 1')
+          throw new Error('No se encontró el jugador')
         }
 
         setPlayer(selectedPlayer)
@@ -101,6 +105,7 @@ export default function PlayerProfile({ onBack }) {
       }
 
       const newDeck = await response.json()
+      soundManager.playCardPlace()
 
       setDecks(previous => [...previous, newDeck])
       setDeckName('')
@@ -117,7 +122,7 @@ export default function PlayerProfile({ onBack }) {
       <header className="profile-header">
         <h1>ONE PIECE - MI PERFIL</h1>
 
-        <button onClick={onBack} type="button">
+        <button onClick={() => { soundManager.playCardRemove(); onBack(); }} type="button">
           ← Volver al menú
         </button>
       </header>
@@ -141,6 +146,43 @@ export default function PlayerProfile({ onBack }) {
                 <h3>{player.username}</h3>
                 <p>{player.email}</p>
               </div>
+
+              {playersList.length > 1 && (
+                <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                  <label htmlFor="player-select" style={{ fontSize: '0.8rem', color: '#a58d74' }}>
+                    Cambiar Perfil:
+                  </label>
+                  <select
+                    id="player-select"
+                    value={player.id}
+                    onChange={(e) => {
+                      const found = playersList.find(p => p.id === Number(e.target.value))
+                      if (found) {
+                        soundManager.playCardTake()
+                        setPlayer(found)
+                        setSelectedDeck(null)
+                      }
+                    }}
+                    style={{
+                      background: '#241a15',
+                      color: '#f0dfcb',
+                      border: '1.5px solid #8b5a2b',
+                      borderRadius: '8px',
+                      padding: '6px 12px',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      fontWeight: 'bold',
+                      outline: 'none'
+                    }}
+                  >
+                    {playersList.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.username} (#{p.id})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
             
             <div className="profile-decks">
@@ -174,7 +216,10 @@ export default function PlayerProfile({ onBack }) {
                     className={`deck-item ${
                       selectedDeck?.id === deck.id ? 'deck-selected' : ''
                     }`}
-                    onClick={() => setSelectedDeck(deck)}
+                    onClick={() => {
+                      soundManager.playCardTake()
+                      setSelectedDeck(deck)
+                    }}
                   >
                     <strong>{deck.name}</strong>
                     <span>Mazo #{deck.id} →</span>
@@ -191,7 +236,10 @@ export default function PlayerProfile({ onBack }) {
 
                   <button
                     type="button"
-                    onClick={() => setSelectedDeck(null)}
+                    onClick={() => {
+                      soundManager.playCardRemove()
+                      setSelectedDeck(null)
+                    }}
                   >
                     Cerrar mazo
                   </button>

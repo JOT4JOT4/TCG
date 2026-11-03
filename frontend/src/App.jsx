@@ -4,6 +4,7 @@ import PLayerProfile from './PlayerProfile'
 import gameBg from './assets/background-while-game.webp'
 import arenaBg from './assets/escenario-juego.jpg'
 import backCardImg from './assets/backcard.png'
+import soundManager from './soundManager'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -119,8 +120,20 @@ function GameScreen({ onBackToMenu }) {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [muted, setMuted] = useState(soundManager.isMuted())
+
+  const toggleMute = () => {
+    const next = soundManager.toggleMute()
+    setMuted(next)
+  }
+
+  const handleBackToMenu = () => {
+    soundManager.playCardRemove()
+    onBackToMenu()
+  }
 
   async function startGame() {
+    soundManager.playCardTake()
     setError('')
     setBusy(true)
     try { setGame(await api('/combat/games', { method: 'POST' })) }
@@ -131,6 +144,13 @@ function GameScreen({ onBackToMenu }) {
   useEffect(() => { startGame() }, [])
 
   async function perform(path, body) {
+    if (path === 'choice') {
+      soundManager.playCardPlace()
+    } else if (path === 'reveal') {
+      soundManager.playCardFlip()
+    } else if (path === 'resolve') {
+      soundManager.playCardTake()
+    }
     setError('')
     setBusy(true)
     try { setGame(await api(`/combat/games/${game.game_id}/${path}`, { method: 'POST', body: body ? JSON.stringify(body) : undefined })) }
@@ -187,10 +207,13 @@ function GameScreen({ onBackToMenu }) {
           <span className="round-pill">RONDA {game.round}</span>
         </div>
         <div className="topbar-actions">
+          <WoodGameButton onClick={toggleMute} className="wood-btn-sm-game" title={muted ? 'Activar música' : 'Silenciar música'}>
+            {muted ? '🔇 Música' : '🎵 Música'}
+          </WoodGameButton>
           <WoodGameButton onClick={startGame} disabled={busy} className="wood-btn-sm-game">
             ↻ Reiniciar
           </WoodGameButton>
-          <WoodGameButton onClick={onBackToMenu} className="wood-btn-sm-game">
+          <WoodGameButton onClick={handleBackToMenu} className="wood-btn-sm-game">
             ← Menú
           </WoodGameButton>
         </div>
@@ -257,7 +280,7 @@ function GameScreen({ onBackToMenu }) {
                 <WoodGameButton onClick={startGame} disabled={busy} className="wood-action-hero">
                   Nueva partida <span>↻</span>
                 </WoodGameButton>
-                <WoodGameButton onClick={onBackToMenu} className="wood-action-hero">
+                <WoodGameButton onClick={handleBackToMenu} className="wood-action-hero">
                   Volver al Menú <span>←</span>
                 </WoodGameButton>
               </div>
@@ -315,7 +338,6 @@ function GameScreen({ onBackToMenu }) {
         </div>
         {game.phase === 'finished' && (
           <div className={`winner-banner ${game.winner === 'player' ? 'banner-victory' : 'banner-defeat'}`}>
-            <span className="winner-skull">☠</span>
             <h3>{game.winner === 'player' ? '¡VICTORIA PIRATA!' : '¡DERROTA EN EL MAR!'}</h3>
             <p>{game.winner === 'player' ? 'El campo de batalla es tuyo, ¡has dominado el Grand Line!' : 'Tus cartas cayeron en combate. Entrena tu Haki y vuelve a zarpar.'}</p>
           </div>
@@ -331,6 +353,20 @@ export default function App() {
   const [musicVol, setMusicVol] = useState(70)
   const [sfxVol, setSfxVol] = useState(80)
 
+  useEffect(() => {
+    soundManager.init(musicVol, sfxVol)
+  }, [])
+
+  const handleMusicChange = (val) => {
+    setMusicVol(val)
+    soundManager.setMusicVolume(val)
+  }
+
+  const handleSfxChange = (val) => {
+    setSfxVol(val)
+    soundManager.setSfxVolume(val)
+  }
+
   if (screen === 'menu') {
     return (
       <MainMenu
@@ -338,8 +374,8 @@ export default function App() {
         onProfile={() => setScreen('profile')}
         musicVol={musicVol}
         sfxVol={sfxVol}
-        onMusicChange={setMusicVol}
-        onSfxChange={setSfxVol}
+        onMusicChange={handleMusicChange}
+        onSfxChange={handleSfxChange}
       />
     )
   }

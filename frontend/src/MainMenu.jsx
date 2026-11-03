@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import mapBg from './assets/MapaOnePiecesTGC_Background.webp'
+import soundManager from './soundManager'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -100,6 +101,15 @@ function VolumeSlider({ label, icon, value, onChange }) {
 
 /* ─── Componente: Panel de Opciones en formato madera ────────── */
 function OptionsPanel({ musicVol, sfxVol, onMusicChange, onSfxChange, onClose }) {
+  const handleClose = () => {
+    soundManager.playCardRemove()
+    onClose()
+  }
+
+  const handleSfxPreview = (val) => {
+    onSfxChange(val)
+    soundManager.playCardPlace()
+  }
   return (
     <div className="mm-overlay" role="dialog" aria-modal="true" aria-label="Opciones">
       <div className="wood-modal-container">
@@ -112,7 +122,7 @@ function OptionsPanel({ musicVol, sfxVol, onMusicChange, onSfxChange, onClose })
         </div>
 
         <div className="wood-modal-close-corner">
-          <WoodRoundButton onClick={onClose} title="Cerrar" ariaLabel="Cerrar opciones">
+          <WoodRoundButton onClick={handleClose} title="Cerrar" ariaLabel="Cerrar opciones">
             ✕
           </WoodRoundButton>
         </div>
@@ -120,7 +130,7 @@ function OptionsPanel({ musicVol, sfxVol, onMusicChange, onSfxChange, onClose })
         <div className="wood-modal-body">
           <p className="wood-modal-section-title">Ajustes de Sonido</p>
           <VolumeSlider label="Música" icon="🎵" value={musicVol} onChange={onMusicChange} />
-          <VolumeSlider label="Efectos" icon="🔊" value={sfxVol} onChange={onSfxChange} />
+          <VolumeSlider label="Efectos" icon="🔊" value={sfxVol} onChange={handleSfxPreview} />
         </div>
 
         <div className="wood-modal-actions">
@@ -138,6 +148,10 @@ function OptionsPanel({ musicVol, sfxVol, onMusicChange, onSfxChange, onClose })
 
 /* ─── Componente: Panel de Créditos en formato madera ────────── */
 function CreditsPanel({ onClose }) {
+  const handleClose = () => {
+    soundManager.playCardRemove()
+    onClose()
+  }
   return (
     <div className="mm-overlay" role="dialog" aria-modal="true" aria-label="Créditos">
       <div className="wood-modal-container wood-credits-modal">
@@ -150,7 +164,7 @@ function CreditsPanel({ onClose }) {
         </div>
 
         <div className="wood-modal-close-corner">
-          <WoodRoundButton onClick={onClose} title="Cerrar" ariaLabel="Cerrar créditos">
+          <WoodRoundButton onClick={handleClose} title="Cerrar" ariaLabel="Cerrar créditos">
             ✕
           </WoodRoundButton>
         </div>
@@ -226,6 +240,10 @@ function CardItem({ card, onClick, className = '' }) {
 
 /* ─── Componente: Modal de Detalle de Carta ─────────────────── */
 function CardDetailModal({ card, onClose }) {
+  const handleClose = () => {
+    soundManager.playCardFlip()
+    onClose()
+  }
   if (!card) return null
 
   const ADVANTAGES = {
@@ -248,9 +266,9 @@ function CardDetailModal({ card, onClose }) {
   const adv = ADVANTAGES[card.card_type] || {}
 
   return (
-    <div className="card-detail-overlay" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="card-detail-overlay" onClick={handleClose} role="dialog" aria-modal="true">
       <div className="card-detail-box" onClick={(e) => e.stopPropagation()}>
-        <button className="card-detail-close" onClick={onClose} type="button" aria-label="Cerrar detalle">
+        <button className="card-detail-close" onClick={handleClose} type="button" aria-label="Cerrar detalle">
           ✕
         </button>
 
@@ -293,7 +311,7 @@ function CardDetailModal({ card, onClose }) {
               <p className="card-detail-text">{card.description || 'Sin descripción disponible.'}</p>
             </div>
 
-            <button className="card-detail-action" onClick={onClose} type="button">
+            <button className="card-detail-action" onClick={handleClose} type="button">
               ← Volver a la Colección
             </button>
           </div>
@@ -305,6 +323,20 @@ function CardDetailModal({ card, onClose }) {
 
 /* ─── Componente: Panel de Galería (Colección de cartas) ──────── */
 function GalleryPanel({ onClose }) {
+  const handleClose = () => {
+    soundManager.playCardRemove()
+    onClose()
+  }
+
+  const handleFilterChange = (newFilter) => {
+    soundManager.playCardTake()
+    setFilter(newFilter)
+  }
+
+  const handleSelectCard = (card) => {
+    soundManager.playCardFlip()
+    setSelectedCard(card)
+  }
   const [cards, setCards] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -349,7 +381,7 @@ function GalleryPanel({ onClose }) {
         </div>
 
         <div className="wood-modal-close-corner">
-          <WoodRoundButton onClick={onClose} title="Cerrar" ariaLabel="Cerrar galería">
+          <WoodRoundButton onClick={handleClose} title="Cerrar" ariaLabel="Cerrar galería">
             ✕
           </WoodRoundButton>
         </div>
@@ -360,28 +392,28 @@ function GalleryPanel({ onClose }) {
             <button
               type="button"
               className={`wood-filter-btn${filter === 'all' ? ' active' : ''}`}
-              onClick={() => setFilter('all')}
+              onClick={() => handleFilterChange('all')}
             >
               TODAS ({counts.all})
             </button>
             <button
               type="button"
               className={`wood-filter-btn filter-btn-zoan${filter === 'zoan' ? ' active' : ''}`}
-              onClick={() => setFilter('zoan')}
+              onClick={() => handleFilterChange('zoan')}
             >
               ZOAN ({counts.zoan})
             </button>
             <button
               type="button"
               className={`wood-filter-btn filter-btn-paramecia${filter === 'paramecia' ? ' active' : ''}`}
-              onClick={() => setFilter('paramecia')}
+              onClick={() => handleFilterChange('paramecia')}
             >
               PARAMECIA ({counts.paramecia})
             </button>
             <button
               type="button"
               className={`wood-filter-btn filter-btn-logia${filter === 'logia' ? ' active' : ''}`}
-              onClick={() => setFilter('logia')}
+              onClick={() => handleFilterChange('logia')}
             >
               LOGIA ({counts.logia})
             </button>
@@ -412,7 +444,7 @@ function GalleryPanel({ onClose }) {
               <div
                 key={card.id}
                 className="gallery-card-item"
-                onClick={() => setSelectedCard(card)}
+                onClick={() => handleSelectCard(card)}
               >
                 <CardItem card={card} />
               </div>
@@ -443,6 +475,25 @@ export default function MainMenu({ onPlay, onProfile, musicVol, sfxVol, onMusicC
   const [panel, setPanel] = useState(null) // null | 'options' | 'credits' | 'gallery'
 
   const closePanel = () => setPanel(null)
+
+  const handlePlay = () => {
+    soundManager.playCardPlace()
+    onPlay()
+  }
+
+  const handleProfile = () => {
+    soundManager.playButtonClick()
+    onProfile()
+  }
+
+  const handleOpenPanel = (name) => {
+    if (name === 'gallery') {
+      soundManager.playCardFlip()
+    } else {
+      soundManager.playButtonClick()
+    }
+    setPanel(name)
+  }
 
   return (
     <div className="mm-root">
@@ -476,11 +527,11 @@ export default function MainMenu({ onPlay, onProfile, musicVol, sfxVol, onMusicC
 
           {/* Lista de 4 botones de madera */}
           <nav className="wood-btn-list" aria-label="Menú principal">
-            <WoodButton onClick={onPlay}>JUGAR</WoodButton>
-            <WoodButton onClick={onProfile}>Mi Perfil</WoodButton>
-            <WoodButton onClick={() => setPanel('gallery')}>CARTAS</WoodButton>
-            <WoodButton onClick={() => setPanel('options')}>OPCIONES</WoodButton>
-            <WoodButton onClick={() => setPanel('credits')}>CRÉDITOS</WoodButton>
+            <WoodButton onClick={handlePlay}>JUGAR</WoodButton>
+            <WoodButton onClick={handleProfile}>Mi Perfil</WoodButton>
+            <WoodButton onClick={() => handleOpenPanel('gallery')}>CARTAS</WoodButton>
+            <WoodButton onClick={() => handleOpenPanel('options')}>OPCIONES</WoodButton>
+            <WoodButton onClick={() => handleOpenPanel('credits')}>CRÉDITOS</WoodButton>
           </nav>
 
           {/* Base inferior de madera con tornillos */}

@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.db.session import SessionLocal
 from app.models.card import Card, CardType
+from app.models.player import Player
+from app.models.deck import Deck, DeckCard
 
 DEFAULT_CARDS = [
     {"name": "Bartholomew Kuma", "card_type": CardType.PARAMECIA, "power": 8, "description": "Antiguo Shichibukai. Con la fruta Nikyu Nikyu repele materia, dolor y ataques a la velocidad del aire.", "image_url": "/cards/__bartholomew_kuma_one_piece_and_1_more_drawn_by_ryuda__0f72a2f93ccd130e74c81032031f4d66.jpg"},
@@ -100,11 +102,140 @@ def seed_cards(db: Session) -> int:
     return count
 
 
+
+DEFAULT_PLAYERS = [
+    {
+        "username": "Monkey D. Luffy",
+        "email": "luffy@example.com",
+        "decks": [
+            {
+                "name": "Mazo Sombrero de Paja",
+                "cards": [
+                    ("Monkey D. Luffy Sombrero de Paja", 2),
+                    ("Roronoa Zoro Santoryu", 2),
+                    ("Sanji Pierna Negra", 2),
+                    ("Nami la Gata Ladrona", 2),
+                    ("Tony Tony Chopper Médico", 2),
+                    ("Dios Usopp Tirador Legendario", 2),
+                ],
+            },
+            {
+                "name": "Alianza de Wano",
+                "cards": [
+                    ("Alianza de Wano (Luffy, Yamato & Momonosuke)", 2),
+                    ("Monkey D. Luffy Gear 4", 2),
+                    ("Roronoa Zoro Rey del Infierno", 2),
+                    ("Jinbe Caballero del Mar", 2),
+                    ("Franky el Cyborg de Hierro", 2),
+                    ("Nico Robin Demonio Fleur", 2),
+                ],
+            },
+        ],
+    },
+    {
+        "username": "Roronoa Zoro",
+        "email": "zoro@example.com",
+        "decks": [
+            {
+                "name": "Tres Espadas del Infierno",
+                "cards": [
+                    ("Roronoa Zoro Santoryu", 3),
+                    ("Roronoa Zoro Torbellino del Dragón", 3),
+                    ("Roronoa Zoro Rey del Infierno", 3),
+                    ("Dracule Mihawk Ojos de Halcón", 3),
+                ],
+            }
+        ],
+    },
+    {
+        "username": "Trafalgar Law",
+        "email": "law@example.com",
+        "decks": [
+            {
+                "name": "Tácticas de Cirugía (Room)",
+                "cards": [
+                    ("Trafalgar Law Cirujano de la Muerte", 3),
+                    ("Donquixote Rosinante (Corazón)", 3),
+                    ("Eustass Captain Kid", 3),
+                    ("Bartholomew Kuma", 3),
+                ],
+            }
+        ],
+    },
+    {
+        "username": "Portgas D. Ace",
+        "email": "ace@example.com",
+        "decks": [
+            {
+                "name": "Llamas de Barbablanca",
+                "cards": [
+                    ("Portgas D. Ace Puño de Fuego", 3),
+                    ("Edward Newgate (Barbablanca)", 3),
+                    ("Sabo Emperador de las Llamas", 3),
+                    ("Luffy & Ace Hermanos del Mar", 3),
+                ],
+            }
+        ],
+    },
+    {
+        "username": "Shanks el Pelirrojo",
+        "email": "shanks@examle.com",
+        "decks": [
+            {
+                "name": "Haki del Conquistador",
+                "cards": [
+                    ("Shanks el Pelirrojo", 3),
+                    ("Shanks & Piratas del Pelirrojo", 3),
+                    ("Gol D. Roger Rey Pirata", 3),
+                    ("Dracule Mihawk Ojos de Halcón", 3),
+                ],
+            }
+        ],
+    },
+]
+
+
+def seed_players(db: Session) -> int:
+    """Populate default players and decks if none exist."""
+    count = 0
+    all_cards = {c.name: c for c in db.scalars(select(Card))}
+
+    for player_data in DEFAULT_PLAYERS:
+        username = player_data["username"]
+        email = player_data["email"]
+
+        player = db.scalar(select(Player).where((Player.username == username) | (Player.email == email)))
+        if not player:
+            player = Player(username=username, email=email)
+            db.add(player)
+            db.flush()
+            count += 1
+
+        existing_decks = list(db.scalars(select(Deck).where(Deck.owner_id == player.id)))
+        if not existing_decks and "decks" in player_data:
+            for deck_info in player_data["decks"]:
+                deck = Deck(name=deck_info["name"], owner_id=player.id)
+                db.add(deck)
+                db.flush()
+
+                for card_name, qty in deck_info["cards"]:
+                    card = all_cards.get(card_name)
+                    if card:
+                        deck_card = DeckCard(deck_id=deck.id, card_id=card.id, quantity=qty)
+                        db.add(deck_card)
+
+    if count > 0:
+        db.commit()
+    return count
+
 def main() -> None:
     with SessionLocal() as db:
-        inserted = seed_cards(db)
-        total = db.scalar(select(Card).with_only_columns(Card.id).order_by(Card.id.desc())) or 0
-        print(f"Seed complete: {inserted} cards added/updated. Total cards now in database.")
+        inserted_cards = seed_cards(db)
+        inserted_players = seed_players(db)
+        total_cards = db.scalar(select(Card).with_only_columns(Card.id).order_by(Card.id.desc())) or 0
+        total_players = len(list(db.scalars(select(Player))))
+        print(f"Seed complete: {inserted_cards} cards added/updated, {inserted_players} players added.")
+        print(f"Total in database: {total_cards} cards, {total_players} players.")
 
 
 if __name__ == "__main__":
