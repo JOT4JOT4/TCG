@@ -1,42 +1,42 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:16.4-alpine
     container_name: tcg_db
     environment:
-      POSTGRES_DB: tcg
-      POSTGRES_USER: tcg_user
-      POSTGRES_PASSWORD: tcg_password
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
       - "5432:5432"
     volumes:
       - tcg_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
-    image: python:3.12-slim
+    build:
+      context: ./backend
     container_name: tcg_backend
-    working_dir: /app
-    command: sh -c "pip install --no-cache-dir -e . && alembic upgrade head && python -m app.db.seed && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     environment:
-      DATABASE_URL: postgresql+psycopg://tcg_user:tcg_password@db:5432/tcg
-      PYTHONPATH: /app
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS in .env}
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
-    image: node:22-alpine
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:?Set VITE_API_URL in .env}
     container_name: tcg_frontend
-    working_dir: /app
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
-    environment:
-      VITE_API_URL: http://localhost:8000
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
+      - "5173:80"
     depends_on:
       - backend
 

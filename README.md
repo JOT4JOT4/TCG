@@ -129,8 +129,26 @@ El frontend estará disponible en `http://localhost:5173` y usará `http://local
 Desde la raíz del repositorio:
 
 ```powershell
+Copy-Item .env.example .env
+# Edita .env y cambia POSTGRES_PASSWORD antes de usarlo fuera de tu máquina.
 docker compose up --build
 ```
+
+Docker usa los lockfiles comprometidos en el repositorio:
+
+- `frontend/package-lock.json` fija las dependencias de Node.
+- `backend/uv.lock` fija las dependencias de Python.
+- `backend/Dockerfile` instala Python con `uv sync --frozen`.
+- `frontend/Dockerfile` instala Node con `npm ci`.
+
+La configuración sensible y dependiente del entorno se lee desde `.env`:
+
+- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`: credenciales de PostgreSQL.
+- `CORS_ORIGINS`: orígenes permitidos separados por comas.
+- `VITE_API_URL`: URL pública de la API que se incorpora al build del frontend.
+
+No se debe versionar `.env`. Para CI se usa `.env.example` únicamente para
+validar que las imágenes puedan construirse.
 
 Servicios disponibles:
 

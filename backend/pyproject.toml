@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "tcg-backend"
 version = "0.1.0"
 description = "Backend monolítico para un TCG básico"
-readme = "../README.md"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi>=0.115",
