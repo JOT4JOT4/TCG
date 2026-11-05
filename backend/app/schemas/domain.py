@@ -73,6 +73,11 @@ class CombatCreate(BaseModel):
     player_two_card_id: int
 
 
+class CombatGameCreate(BaseModel):
+    player_id: int
+    deck_id: int
+
+
 class CombatRead(CombatCreate):
     model_config = ConfigDict(from_attributes=True)
 

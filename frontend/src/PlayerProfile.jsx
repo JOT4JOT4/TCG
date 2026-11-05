@@ -5,7 +5,7 @@ import soundManager from './soundManager'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-export default function PlayerProfile({ onBack }) {
+export default function PlayerProfile({ onBack, onSelectionChange, onStartCombat }) {
   const [player, setPlayer] = useState(null)
   const [playersList, setPlayersList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -32,10 +32,8 @@ export default function PlayerProfile({ onBack }) {
           return
         }
 
-        // Seleccionamos el usuario de prueba con ID 1
         setPlayersList(players)
-
-        const selectedPlayer = players.find(p => p.id === 1) || players[0]
+        const selectedPlayer = players[0]
 
         if (!selectedPlayer) {
           throw new Error('No se encontró el jugador')
@@ -60,19 +58,13 @@ export default function PlayerProfile({ onBack }) {
 
         setDeckError('')
 
-        const response = await fetch(`${API_URL}/api/decks`)
+        const response = await fetch(`${API_URL}/api/players/${player.id}/decks`)
 
         if (!response.ok) {
           throw new Error('No se pudieron cargar los mazos')
         }
 
-        const allDecks = await response.json()
-
-        const playerDecks = allDecks.filter(
-          deck => deck.owner_id === player.id
-        )
-
-        setDecks(playerDecks)
+        setDecks(await response.json())
       } catch (err) {
         setDeckError(err.message)
       }
@@ -161,6 +153,7 @@ export default function PlayerProfile({ onBack }) {
                         soundManager.playCardTake()
                         setPlayer(found)
                         setSelectedDeck(null)
+                        onSelectionChange(null)
                       }
                     }}
                     style={{
@@ -219,6 +212,7 @@ export default function PlayerProfile({ onBack }) {
                     onClick={() => {
                       soundManager.playCardTake()
                       setSelectedDeck(deck)
+                      onSelectionChange({ playerId: player.id, deckId: deck.id })
                     }}
                   >
                     <strong>{deck.name}</strong>
@@ -233,6 +227,16 @@ export default function PlayerProfile({ onBack }) {
                     key={selectedDeck.id}
                     deck={selectedDeck}
                   />
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundManager.playCardPlace()
+                      onStartCombat()
+                    }}
+                  >
+                    Jugar con este mazo
+                  </button>
 
                   <button
                     type="button"

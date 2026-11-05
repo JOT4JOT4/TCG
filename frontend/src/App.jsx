@@ -116,7 +116,7 @@ function Life({ value, label, rival = false }) {
 }
 
 /* ─── Componente: Pantalla de juego ──────────────────────────── */
-function GameScreen({ onBackToMenu }) {
+function GameScreen({ playerId, deckId, onBackToMenu }) {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -136,7 +136,12 @@ function GameScreen({ onBackToMenu }) {
     soundManager.playCardTake()
     setError('')
     setBusy(true)
-    try { setGame(await api('/combat/games', { method: 'POST' })) }
+    try {
+      setGame(await api('/combat/games', {
+        method: 'POST',
+        body: JSON.stringify({ player_id: playerId, deck_id: deckId }),
+      }))
+    }
     catch (requestError) { setError(requestError.message) }
     finally { setBusy(false) }
   }
@@ -327,9 +332,9 @@ function GameScreen({ onBackToMenu }) {
           <span className="hand-count">{game.player.hand.length} CARTAS EN MANO</span>
         </div>
         <div className="hand">
-          {game.player.hand.map((card) => (
+          {game.player.hand.map((card, index) => (
             <Card
-              key={card.id}
+              key={`${card.id}-${index}`}
               card={card}
               onClick={() => perform('choice', { card_id: card.id })}
               disabled={busy || game.phase !== 'selecting'}
@@ -350,6 +355,7 @@ function GameScreen({ onBackToMenu }) {
 /* ─── App raíz ───────────────────────────────────────────────── */
 export default function App() {
   const [screen, setScreen] = useState('menu') // 'menu' | 'game' | 'profile'
+  const [gameSetup, setGameSetup] = useState(null)
   const [musicVol, setMusicVol] = useState(70)
   const [sfxVol, setSfxVol] = useState(80)
 
@@ -367,10 +373,18 @@ export default function App() {
     soundManager.setSfxVolume(val)
   }
 
+  const handlePlay = () => {
+    if (gameSetup) {
+      setScreen('game')
+    } else {
+      setScreen('profile')
+    }
+  }
+
   if (screen === 'menu') {
     return (
       <MainMenu
-        onPlay={() => setScreen('game')}
+        onPlay={handlePlay}
         onProfile={() => setScreen('profile')}
         musicVol={musicVol}
         sfxVol={sfxVol}
@@ -382,9 +396,19 @@ export default function App() {
 
   if (screen === 'profile') {
     return (
-      <PLayerProfile onBack={() => setScreen('menu')} />
+      <PLayerProfile
+        onBack={() => setScreen('menu')}
+        onSelectionChange={setGameSetup}
+        onStartCombat={() => setScreen('game')}
+      />
     )
   }
 
-  return <GameScreen onBackToMenu={() => setScreen('menu')} />
+  return (
+    <GameScreen
+      playerId={gameSetup.playerId}
+      deckId={gameSetup.deckId}
+      onBackToMenu={() => setScreen('menu')}
+    />
+  )
 }
