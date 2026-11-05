@@ -64,6 +64,15 @@ def _card_list(cards: list[GameCard]) -> list[dict[str, int | str | None]]:
     return [card.as_dict() for card in cards]
 
 
+def _draw_next_card(combatant: Combatant) -> None:
+    if not combatant.deck and not combatant.hand and combatant.graveyard:
+        combatant.deck = combatant.graveyard.copy()
+        combatant.graveyard.clear()
+        shuffle(combatant.deck)
+    if combatant.deck:
+        combatant.hand.append(combatant.deck.pop(0))
+
+
 def serialize_game(game: Game, reveal: bool = False) -> dict:
     return {
         "round": game.round,
@@ -97,6 +106,7 @@ def choose_player_card(game: Game, card_id: int) -> None:
         raise ValueError("The selected card is not in the player's hand")
 
     game.player.hand.remove(selected)
+    shuffle(game.player.hand)
     game.player_field = selected
     if not game.rival.hand:
         raise ValueError("The rival has no cards available")
@@ -138,10 +148,8 @@ def resolve_game_round(game: Game) -> None:
         game.phase = "finished"
         return
 
-    if game.player.deck:
-        game.player.hand.append(game.player.deck.pop(0))
-    if game.rival.deck:
-        game.rival.hand.append(game.rival.deck.pop(0))
+    _draw_next_card(game.player)
+    _draw_next_card(game.rival)
     game.player_field = None
     game.rival_field = None
     game.result = None

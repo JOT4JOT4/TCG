@@ -5,7 +5,7 @@ import soundManager from './soundManager'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-export default function PlayerProfile({ onBack, onSelectionChange }) {
+export default function PlayerProfile({ onBack, onSelectionChange, onStartCombat }) {
   const [player, setPlayer] = useState(null)
   const [playersList, setPlayersList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -227,6 +227,16 @@ export default function PlayerProfile({ onBack, onSelectionChange }) {
                     key={selectedDeck.id}
                     deck={selectedDeck}
                   />
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundManager.playCardPlace()
+                      onStartCombat()
+                    }}
+                  >
+                    Jugar con este mazo
+                  </button>
 
                   <button
                     type="button"

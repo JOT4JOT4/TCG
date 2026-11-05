@@ -332,9 +332,9 @@ function GameScreen({ playerId, deckId, onBackToMenu }) {
           <span className="hand-count">{game.player.hand.length} CARTAS EN MANO</span>
         </div>
         <div className="hand">
-          {game.player.hand.map((card) => (
+          {game.player.hand.map((card, index) => (
             <Card
-              key={card.id}
+              key={`${card.id}-${index}`}
               card={card}
               onClick={() => perform('choice', { card_id: card.id })}
               disabled={busy || game.phase !== 'selecting'}
@@ -399,6 +399,7 @@ export default function App() {
       <PLayerProfile
         onBack={() => setScreen('menu')}
         onSelectionChange={setGameSetup}
+        onStartCombat={() => setScreen('game')}
       />
     )
   }
