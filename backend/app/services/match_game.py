@@ -48,31 +48,16 @@ class Game:
     winner: str | None = None
 
 
-CARD_LIBRARY = [
-    GameCard(1, "Dragón de Brasa", "logia", 7, "Una llama que no puede tocarse."),
-    GameCard(2, "Monje de la Tormenta", "paramecia", 6, "Convierte el viento en golpes precisos."),
-    GameCard(3, "Lobo de Hierro", "zoan", 8, "Su armadura natural no cede."),
-    GameCard(4, "Oráculo Lunar", "logia", 4, "Lee el próximo movimiento."),
-    GameCard(5, "Rompemareas", "paramecia", 8, "Parte las olas con una mano."),
-    GameCard(6, "Halcón del Cielo", "zoan", 5, "Ataca desde las nubes."),
-    GameCard(7, "Llama de Cristal", "logia", 6, "Brilla antes de quemar."),
-    GameCard(8, "Puño Gravitatorio", "paramecia", 5, "Aplasta todo a su alrededor."),
-    GameCard(9, "Oso Feral", "zoan", 7, "Una fuerza imposible de detener."),
-    GameCard(10, "Caminante de Bruma", "logia", 3, "Desaparece en el aire."),
-    GameCard(11, "Reina de Espinas", "paramecia", 7, "Cada defensa tiene un precio."),
-    GameCard(12, "Tigre del Trueno", "zoan", 6, "Su rugido anuncia la victoria."),
-]
-
-
 def _new_combatant(cards: list[GameCard]) -> Combatant:
     shuffled_cards = cards.copy()
     shuffle(shuffled_cards)
     return Combatant(deck=shuffled_cards[STARTING_HAND_SIZE:], hand=shuffled_cards[:STARTING_HAND_SIZE])
 
 
-def create_game(cards: list[GameCard] | None = None) -> Game:
-    pool = cards if cards and len(cards) >= STARTING_HAND_SIZE else CARD_LIBRARY
-    return Game(player=_new_combatant(pool), rival=_new_combatant(list(reversed(pool))))
+def create_game(player_cards: list[GameCard], rival_cards: list[GameCard]) -> Game:
+    if len(player_cards) < STARTING_HAND_SIZE or len(rival_cards) < STARTING_HAND_SIZE:
+        raise ValueError("Both decks must contain at least five cards")
+    return Game(player=_new_combatant(player_cards), rival=_new_combatant(rival_cards))
 
 
 def _card_list(cards: list[GameCard]) -> list[dict[str, int | str | None]]:

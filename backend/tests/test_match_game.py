@@ -1,5 +1,43 @@
 def test_combat_game_is_resolved_by_backend(client) -> None:
-    game = client.post("/api/combat/games")
+    player = client.post(
+        "/api/players",
+        json={"username": "player-one", "email": "player-one@example.com"},
+    ).json()
+    rival = client.post(
+        "/api/players",
+        json={"username": "player-two", "email": "player-two@example.com"},
+    ).json()
+    cards = []
+    for index in range(5):
+        cards.append(
+            client.post(
+                "/api/cards",
+                json={
+                    "name": f"Combat card {index}",
+                    "card_type": ["logia", "paramecia", "zoan"][index % 3],
+                    "power": index + 1,
+                },
+            ).json()
+        )
+
+    decks = []
+    for owner in (player, rival):
+        deck = client.post(
+            "/api/decks",
+            json={"name": f"Deck {owner['id']}", "owner_id": owner["id"]},
+        ).json()
+        decks.append(deck)
+        for card in cards:
+            response = client.post(
+                f"/api/decks/{deck['id']}/cards",
+                json={"card_id": card["id"], "quantity": 1},
+            )
+            assert response.status_code == 201
+
+    game = client.post(
+        "/api/combat/games",
+        json={"player_id": player["id"], "deck_id": decks[0]["id"]},
+    )
     assert game.status_code == 201
     state = game.json()
     assert state["phase"] == "selecting"
