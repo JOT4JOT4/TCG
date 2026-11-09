@@ -11,17 +11,18 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const STARTING_LIFE = 3
 const TYPE_LABELS = { logia: 'Logia', paramecia: 'Paramecia', zoan: 'Zoan' }
 const TYPE_ICONS = { logia: '✦', paramecia: '◆', zoan: '◈' }
+const BASE_URL = import.meta.env.BASE_URL
 
 const NUM_IMAGES = {
-  1: '/nums/uno.png',
-  2: '/nums/dos.png',
-  3: '/nums/tres.png',
-  4: '/nums/cuatro.png',
-  5: '/nums/cinco.png',
-  6: '/nums/seis.png',
-  7: '/nums/siete.png',
-  8: '/nums/ocho.png',
-  9: '/nums/nueve.png',
+  1: '${BASE_URL}/nums/uno.png',
+  2: '${BASE_URL}/nums/dos.png',
+  3: '${BASE_URL}/nums/tres.png',
+  4: '${BASE_URL}/nums/cuatro.png',
+  5: '${BASE_URL}/nums/cinco.png',
+  6: '${BASE_URL}/nums/seis.png',
+  7: '${BASE_URL}/nums/siete.png',
+  8: '${BASE_URL}/nums/ocho.png',
+  9: '${BASE_URL}/nums/nueve.png',
 }
 
 async function api(path, options = {}) {
