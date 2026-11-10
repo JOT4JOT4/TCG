@@ -227,8 +227,6 @@ export default function PlayerProfile({ onBack, onSelectionChange, onStartCombat
                     deck={selectedDeck}
                   />
 
-                  
-
                   <button
                     type="button"
                     onClick={() => {
@@ -244,6 +242,7 @@ export default function PlayerProfile({ onBack, onSelectionChange, onStartCombat
                     onClick={() => {
                       soundManager.playCardRemove()
                       setSelectedDeck(null)
+                      onSelectionChange(null)
                     }}
                   >
                     Cerrar mazo
