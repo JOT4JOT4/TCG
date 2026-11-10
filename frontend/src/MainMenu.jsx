@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import mapBg from './assets/MapaOnePiecesTGC_Background.webp'
 import soundManager from './soundManager'
-import { assetsUrl } from './assetUrl'
+import { assetUrl } from './assetUrl'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
