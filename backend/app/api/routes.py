@@ -21,6 +21,7 @@ from app.schemas import (
     CardRead,
     CombatCreate,
     CombatRead,
+    CombatGameCreate,
     DeckCardCreate,
     DeckCardRead,
     DeckCreate,
@@ -51,24 +52,56 @@ def _game_state(game_id: int) -> dict:
     return state
 
 
-@router.post("/combat/games", response_model=GameStateRead, status_code=status.HTTP_201_CREATED)
-def create_combat_game(db: Session = Depends(get_db)) -> dict:
-    db_cards = list(db.scalars(select(Card).order_by(Card.id)))
-    cards = None
-    if db_cards and len(db_cards) >= 5:
-        cards = [
+def _game_cards(db: Session, deck: Deck) -> list[GameCard]:
+    deck_cards = list(
+        db.scalars(select(DeckCard).where(DeckCard.deck_id == deck.id).order_by(DeckCard.id))
+    )
+    cards: list[GameCard] = []
+    for deck_card in deck_cards:
+        card = db.get(Card, deck_card.card_id)
+        if card is None:
+            continue
+        cards.extend(
             GameCard(
-                id=c.id,
-                name=c.name,
-                card_type=c.card_type.value,
-                power=c.power,
-                description=c.description,
-                image_url=c.image_url,
+                id=card.id,
+                name=card.name,
+                card_type=card.card_type.value,
+                power=card.power,
+                description=card.description,
+                image_url=card.image_url,
             )
-            for c in db_cards
-        ]
+            for _ in range(deck_card.quantity)
+        )
+    return cards
+
+
+@router.post("/combat/games", response_model=GameStateRead, status_code=status.HTTP_201_CREATED)
+def create_combat_game(payload: CombatGameCreate, db: Session = Depends(get_db)) -> dict:
+    player = db.get(Player, payload.player_id)
+    deck = db.get(Deck, payload.deck_id)
+    if player is None:
+        raise HTTPException(status_code=404, detail="Player not found")
+    if deck is None or deck.owner_id != player.id:
+        raise HTTPException(status_code=404, detail="Deck not found for player")
+
+    player_cards = _game_cards(db, deck)
+    if len(player_cards) < 5:
+        raise HTTPException(status_code=400, detail="The selected deck must contain at least five cards")
+
+    rival_deck = db.scalar(
+        select(Deck)
+        .join(Player, Deck.owner_id == Player.id)
+        .where(Deck.owner_id != player.id)
+        .order_by(Deck.id)
+    )
+    if rival_deck is None:
+        raise HTTPException(status_code=409, detail="No rival deck is available")
+    rival_cards = _game_cards(db, rival_deck)
+    if len(rival_cards) < 5:
+        raise HTTPException(status_code=409, detail="No rival deck with at least five cards is available")
+
     game_id = max(games, default=0) + 1
-    games[game_id] = create_game(cards)
+    games[game_id] = create_game(player_cards, rival_cards)
     return _game_state(game_id)
 
 
@@ -125,6 +158,15 @@ def create_player(payload: PlayerCreate, db: Session = Depends(get_db)) -> Playe
 @router.get("/players", response_model=list[PlayerRead])
 def list_players(db: Session = Depends(get_db)) -> list[Player]:
     return list(db.scalars(select(Player).order_by(Player.id)))
+
+
+@router.get("/players/{player_id}/decks", response_model=list[DeckRead])
+def list_player_decks(player_id: int, db: Session = Depends(get_db)) -> list[Deck]:
+    if db.get(Player, player_id) is None:
+        raise HTTPException(status_code=404, detail="Player not found")
+    return list(
+        db.scalars(select(Deck).where(Deck.owner_id == player_id).order_by(Deck.id))
+    )
 
 
 @router.post("/cards", response_model=CardRead, status_code=status.HTTP_201_CREATED)
