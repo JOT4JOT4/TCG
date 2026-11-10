@@ -112,16 +112,6 @@ export default function DeckEditor({ deck }) {
 
     const currentQuantity = existingCard?.quantity ?? 0
 
-
-    if (totalDeckCards >= 12) {
-      setSaveError('El mazo ya tiene 12 cartas')
-      return
-    }
-    if (currentQuantity >= 4) {
-      setSaveError('Máximo 4 copias por carta')
-      return
-    }
-
     setSavingCard(true)
     setSaveError('')
 
@@ -389,11 +379,7 @@ export default function DeckEditor({ deck }) {
                     disabled={
                       savingCard ||
                       loadingDeck ||
-                      !!deckError ||
-                      totalDeckCards >= 12 ||
-                      (deckCards.find(
-                        item => item.card_id === card.id
-                      )?.quantity ?? 0) >= 4
+                      !!deckError
                     }
                   >
                     + Agregar
