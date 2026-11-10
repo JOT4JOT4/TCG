@@ -361,7 +361,7 @@ function GameScreen({ playerId, deckId, onBackToMenu }) {
 /* ─── App raíz ───────────────────────────────────────────────── */
 export default function App() {
   const [screen, setScreen] = useState('menu') // 'menu' | 'game' | 'profile'
-  const [playerId, setPlayerId] = useState(null)
+  const [gameSetup, setGameSetup] = useState(null)
   const [musicVol, setMusicVol] = useState(70)
   const [sfxVol, setSfxVol] = useState(80)
 
@@ -405,7 +405,11 @@ export default function App() {
       <PLayerProfile 
         onBack={() => setScreen('menu')} 
         onSelectionChange={setGameSetup}
-        onStartCombat={() => setScreen('game')}
+        onStartCombat={() => {
+        if (gameSetup?.playerId && gameSetup?.deckId) {
+          setScreen('game')
+        }
+      }}
         />
     )
   }
