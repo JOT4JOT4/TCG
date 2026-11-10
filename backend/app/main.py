@@ -1,9 +1,26 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+import os
+from contextlib import asynccontextmanager
+
+from app.db.session import SessionLocal
+from app.db.seed import seed_players
+
 from app.api.routes import router as api_router
 
-app = FastAPI(title="TCG Backend", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if os.getenv("SEED_DEMO_PLAYERS", "false").lower() == "true":
+        with SessionLocal() as db:
+            added = seed_players(db)
+            print(f"[Startup] Jugadores de prueba creados: {added}")
+
+    yield
+
+
+app = FastAPI(title="TCG Backend", version="0.1.0", lifespan=lifespan,)
 
 app.add_middleware(
     CORSMiddleware,
