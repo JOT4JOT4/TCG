@@ -285,7 +285,7 @@ export default function DeckEditor({ deck }) {
               <div className="deck-editor-card" key={item.card_id}>
                 {item.card?.image_url ? (
                   <img
-                    src={item.card.image_url}
+                    src={`${import.meta.env.BASE_URL}${item.card.image_url.replace(/^\/+/, '')}`}
                     alt={item.card.name}
                     loading="lazy"
                   />
@@ -364,7 +364,7 @@ export default function DeckEditor({ deck }) {
               <div className="deck-editor-card" key={card.id}>
                 {card.image_url ? (
                   <img
-                    src={card.image_url}
+                    src={`${import.meta.env.BASE_URL}${card.image_url.replace(/^\/+/, '')}`}
                     alt={card.name}
                     loading="lazy"
                   />

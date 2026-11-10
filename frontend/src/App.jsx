@@ -14,15 +14,15 @@ const TYPE_ICONS = { logia: '✦', paramecia: '◆', zoan: '◈' }
 const BASE_URL = import.meta.env.BASE_URL
 
 const NUM_IMAGES = {
-  1: '${BASE_URL}/nums/uno.png',
-  2: '${BASE_URL}/nums/dos.png',
-  3: '${BASE_URL}/nums/tres.png',
-  4: '${BASE_URL}/nums/cuatro.png',
-  5: '${BASE_URL}/nums/cinco.png',
-  6: '${BASE_URL}/nums/seis.png',
-  7: '${BASE_URL}/nums/siete.png',
-  8: '${BASE_URL}/nums/ocho.png',
-  9: '${BASE_URL}/nums/nueve.png',
+  1: `${BASE_URL}nums/uno.png`,
+  2: `${BASE_URL}nums/dos.png`,
+  3: `${BASE_URL}nums/tres.png`,
+  4: `${BASE_URL}nums/cuatro.png`,
+  5: `${BASE_URL}nums/cinco.png`,
+  6: `${BASE_URL}nums/seis.png`,
+  7: `${BASE_URL}nums/siete.png`,
+  8: `${BASE_URL}nums/ocho.png`,
+  9: `${BASE_URL}nums/nueve.png`,
 }
 
 async function api(path, options = {}) {
@@ -65,7 +65,13 @@ function Card({ card, faceDown = false, onClick, disabled = false, className = '
       {/* Ilustración de la carta */}
       <div className="card-frame-inner">
         {card.image_url ? (
-          <img src={card.image_url} alt={card.name} className="card-illustration-img" loading="lazy" />
+          
+        <img
+          src={`${import.meta.env.BASE_URL}${card.image_url.replace(/^\/+/, '')}`}
+          alt={card.name}
+          className="card-illustration-img"
+          loading="lazy"
+        />
         ) : (
           <div className="card-art-fallback">{card.name ? card.name.split(' ').map((w) => w[0]).join('') : 'OP'}</div>
         )}
