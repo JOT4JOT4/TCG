@@ -23,6 +23,7 @@ class CardCreate(BaseModel):
     card_type: CardType
     power: int = Field(ge=1, le=9)
     description: str = ""
+    image_url: str | None = None
 
 
 class CardRead(CardCreate):
@@ -86,6 +87,7 @@ class GameCardRead(BaseModel):
     card_type: CardType
     power: int
     description: str
+    image_url: str | None = None
 
 
 class GamePlayerRead(BaseModel):
