@@ -13,8 +13,8 @@ down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
-card_type = sa.Enum("CREATURE", "SPELL", "RESOURCE", name="cardtype", create_type=False)
-match_status = sa.Enum("WAITING", "ACTIVE", "FINISHED", name="matchstatus", create_type=False)
+card_type = sa.Enum("CREATURE", "SPELL", "RESOURCE", name="cardtype")
+match_status = sa.Enum("WAITING", "ACTIVE", "FINISHED", name="matchstatus")
 
 
 def upgrade() -> None:

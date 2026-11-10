@@ -9,7 +9,6 @@ from app.models.match import Match, MatchPlayer, MatchRound
 from app.models.player import Player
 from app.services.combat import resolve_combat
 from app.services.match_game import (
-    GameCard,
     choose_player_card,
     create_game,
     reveal_game,
@@ -52,23 +51,9 @@ def _game_state(game_id: int) -> dict:
 
 
 @router.post("/combat/games", response_model=GameStateRead, status_code=status.HTTP_201_CREATED)
-def create_combat_game(db: Session = Depends(get_db)) -> dict:
-    db_cards = list(db.scalars(select(Card).order_by(Card.id)))
-    cards = None
-    if db_cards and len(db_cards) >= 5:
-        cards = [
-            GameCard(
-                id=c.id,
-                name=c.name,
-                card_type=c.card_type.value,
-                power=c.power,
-                description=c.description,
-                image_url=c.image_url,
-            )
-            for c in db_cards
-        ]
+def create_combat_game() -> dict:
     game_id = max(games, default=0) + 1
-    games[game_id] = create_game(cards)
+    games[game_id] = create_game()
     return _game_state(game_id)
 
 
@@ -171,28 +156,6 @@ def add_card_to_deck(
     deck_card = db.scalar(
         select(DeckCard).where(DeckCard.deck_id == deck_id, DeckCard.card_id == payload.card_id)
     )
-    deck_cards = list(
-        db.scalars(
-            select(DeckCard).where(DeckCard.deck_id == deck_id)
-        )
-    )
-    total_actual = sum(
-        item.quantity for item in deck_cards
-    )
-    cantidad_anterior = (
-        deck_card.quantity if deck_card is not None else 0
-    )
-
-    nuevo_total = (
-        total_actual - cantidad_anterior + payload.quantity
-    )
-
-    if nuevo_total > 12:
-        raise HTTPException(
-            status_code=400,
-            detail="El mazo no puede superar las 12 cartas"
-        )
-
     if deck_card is None:
         deck_card = DeckCard(deck_id=deck_id, **payload.model_dump())
         db.add(deck_card)
@@ -208,37 +171,6 @@ def list_deck_cards(deck_id: int, db: Session = Depends(get_db)) -> list[DeckCar
     if db.get(Deck, deck_id) is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     return list(db.scalars(select(DeckCard).where(DeckCard.deck_id == deck_id).order_by(DeckCard.id)))
-
-
-@router.delete(
-    "/decks/{deck_id}/cards/{card_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def remove_card_from_deck(
-    deck_id: int,
-    card_id: int,
-    db: Session = Depends(get_db),
-) -> None:
-    if db.get(Deck, deck_id) is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Deck not found",
-        )
-
-    deck_card = db.scalar(
-        select(DeckCard).where(
-            DeckCard.deck_id == deck_id,
-            DeckCard.card_id == card_id,
-        )
-    )
-
-    if deck_card is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Card not found in deck",
-        )
-    db.delete(deck_card)
-    db.commit()
 
 
 @router.post("/matches", response_model=MatchRead, status_code=status.HTTP_201_CREATED)

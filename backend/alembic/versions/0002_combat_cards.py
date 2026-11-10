@@ -36,7 +36,7 @@ def upgrade() -> None:
     op.drop_column("cards", "attack")
     op.drop_column("cards", "health")
 
-    round_result = sa.Enum("PLAYER_ONE", "PLAYER_TWO", "DRAW", name="roundresult", create_type=False)
+    round_result = sa.Enum("PLAYER_ONE", "PLAYER_TWO", "DRAW", name="roundresult")
     round_result.create(op.get_bind(), checkfirst=True)
     op.create_table(
         "match_rounds",
