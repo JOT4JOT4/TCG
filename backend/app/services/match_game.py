@@ -15,14 +15,16 @@ class GameCard:
     card_type: str
     power: int
     description: str
+    image_url: str | None = None
 
-    def as_dict(self) -> dict[str, int | str]:
+    def as_dict(self) -> dict[str, int | str | None]:
         return {
             "id": self.id,
             "name": self.name,
             "card_type": self.card_type,
             "power": self.power,
             "description": self.description,
+            "image_url": self.image_url,
         }
 
 
@@ -68,11 +70,12 @@ def _new_combatant(cards: list[GameCard]) -> Combatant:
     return Combatant(deck=shuffled_cards[STARTING_HAND_SIZE:], hand=shuffled_cards[:STARTING_HAND_SIZE])
 
 
-def create_game() -> Game:
-    return Game(player=_new_combatant(CARD_LIBRARY), rival=_new_combatant(list(reversed(CARD_LIBRARY))))
+def create_game(cards: list[GameCard] | None = None) -> Game:
+    pool = cards if cards and len(cards) >= STARTING_HAND_SIZE else CARD_LIBRARY
+    return Game(player=_new_combatant(pool), rival=_new_combatant(list(reversed(pool))))
 
 
-def _card_list(cards: list[GameCard]) -> list[dict[str, int | str]]:
+def _card_list(cards: list[GameCard]) -> list[dict[str, int | str | None]]:
     return [card.as_dict() for card in cards]
 
 
