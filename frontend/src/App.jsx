@@ -5,6 +5,7 @@ import gameBg from './assets/background-while-game.webp'
 import arenaBg from './assets/escenario-juego.jpg'
 import backCardImg from './assets/backcard.png'
 import soundManager from './soundManager'
+import { assetUrl } from './assetUrl'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -67,7 +68,7 @@ function Card({ card, faceDown = false, onClick, disabled = false, className = '
         {card.image_url ? (
           
         <img
-          src={`${import.meta.env.BASE_URL}${card.image_url.replace(/^\/+/, '')}`}
+          src={assetUrl(card.image_url)}
           alt={card.name}
           className="card-illustration-img"
           loading="lazy"

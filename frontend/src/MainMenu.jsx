@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import mapBg from './assets/MapaOnePiecesTGC_Background.webp'
 import soundManager from './soundManager'
+import { assetsUrl } from './assetUrl'
 
 /* ─── Constantes ─────────────────────────────────────────────── */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -8,17 +9,19 @@ const TYPE_LABELS = { logia: 'Logia', paramecia: 'Paramecia', zoan: 'Zoan' }
 const TYPE_ICONS = { logia: '✦', paramecia: '◆', zoan: '◈' }
 const BASE_URL = import.meta.env.BASE_URL
 
+
 const NUM_IMAGES = {
-  1: `${BASE_URL}nums/uno.png`,
-  2: `${BASE_URL}nums/dos.png`,
-  3: `${BASE_URL}nums/tres.png`,
-  4: `${BASE_URL}nums/cuatro.png`,
-  5: `${BASE_URL}nums/cinco.png`,
-  6: `${BASE_URL}nums/seis.png`,
-  7: `${BASE_URL}nums/siete.png`,
-  8: `${BASE_URL}nums/ocho.png`,
-  9: `${BASE_URL}nums/nueve.png`,
+  1: assetUrl('/nums/uno.png'),
+  2: assetUrl('/nums/dos.png'),
+  3: assetUrl('/nums/tres.png'),
+  4: assetUrl('/nums/cuatro.png'),
+  5: assetUrl('/nums/cinco.png'),
+  6: assetUrl('/nums/seis.png'),
+  7: assetUrl('/nums/siete.png'),
+  8: assetUrl('/nums/ocho.png'),
+  9: assetUrl('/nums/nueve.png'),
 }
+
 
 async function fetchCards() {
   const res = await fetch(`${API_URL}/api/cards`)
@@ -222,7 +225,7 @@ function CardItem({ card, onClick, className = '' }) {
         {card.image_url ? (
           
         <img
-          src={`${import.meta.env.BASE_URL}${card.image_url.replace(/^\/+/, '')}`}
+          src={assetUrl(card.image_url)}
           alt={card.name}
           className="card-illustration-img"
           loading="lazy"

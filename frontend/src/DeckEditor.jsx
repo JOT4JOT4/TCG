@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import soundManager from './soundManager'
+import { assetUrl } from './assetUrl'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -285,7 +286,7 @@ export default function DeckEditor({ deck }) {
               <div className="deck-editor-card" key={item.card_id}>
                 {item.card?.image_url ? (
                   <img
-                    src={`${import.meta.env.BASE_URL}${item.card.image_url.replace(/^\/+/, '')}`}
+                    src={assetUrl(item.card.image_url)}
                     alt={item.card.name}
                     loading="lazy"
                   />
@@ -364,7 +365,7 @@ export default function DeckEditor({ deck }) {
               <div className="deck-editor-card" key={card.id}>
                 {card.image_url ? (
                   <img
-                    src={`${import.meta.env.BASE_URL}${card.image_url.replace(/^\/+/, '')}`}
+                    src={assetUrl(card.image_url)}
                     alt={card.name}
                     loading="lazy"
                   />
