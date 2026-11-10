@@ -31,9 +31,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="TCG Backend", version="0.1.0", lifespan=lifespan)
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://jot4jot4.github.io",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
